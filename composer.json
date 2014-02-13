@@ -1,0 +1,28 @@
+{
+    "name": "ledgr/billing",
+    "description": "Invoice and support classes",
+    "keywords": ["billing", "invoice", "OCR"],
+    "homepage": "https://github.com/ledgr/billing",
+    "type": "library",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Hannes Forsgård",
+            "email": "hannes.forsgard@fripost.org"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ledgr/utils": "0.1.*",
+        "ledgr/id": "0.1.*",
+        "ledgr/banking": "0.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "ledgr\\billing\\": "src/"
+        }
+    },
+    "suggest" : {
+        "ledgr/paperinvoice": "Create paper (pdf) representations of invoices"
+    }
+}
