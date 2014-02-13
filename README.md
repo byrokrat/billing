@@ -1,12 +1,13 @@
-# ledgr/billing
+# ledgr/billing [![Build Status](https://travis-ci.org/ledgr/billing.png?branch=master)](https://travis-ci.org/ledgr/billing) [![Code Coverage](https://scrutinizer-ci.com/g/ledgr/billing/badges/coverage.png?s=0a13eb6f754b0e90a8ffa9e633e768ccf006ece8)](https://scrutinizer-ci.com/g/ledgr/billing/)
 
-Invoice and support classes.
+
+Data types for creating invoices.
 
 **License**: [GPL](/LICENSE)
 
 
-## Installation using [composer](http://getcomposer.org/)
-
+Installation using [composer](http://getcomposer.org/)
+------------------------------------------------------
 Simply add `ledgr/billing` to your list of required libraries.
 
 
@@ -43,8 +44,10 @@ list of access methods.
     // prints 125 (100 EUR plus 25% VAT)
 
 
-Running unit tests
-------------------
-From project root simply type
+Run tests  using [phpunit](http://phpunit.de/)
+----------------------------------------------
+To run the tests you must first install dependencies using composer.
 
-    > phpunit
+    $ curl -sS https://getcomposer.org/installer | php
+    $ php composer.phar install
+    $ phpunit
