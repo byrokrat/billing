@@ -18,9 +18,9 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "ledgr/utils": "dev-master",
-        "ledgr/id": "dev-master",
-        "ledgr/banking": "dev-master"
+        "ledgr/utils": "1.0.*",
+        "ledgr/id": "1.0.*",
+        "ledgr/banking": "1.0.*"
     },
     "suggest" : {
         "ledgr/paperinvoice": "Create paper (pdf) representations of invoices"

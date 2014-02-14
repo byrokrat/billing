@@ -1,4 +1,4 @@
-# ledgr/billing [![Build Status](https://travis-ci.org/ledgr/billing.png?branch=master)](https://travis-ci.org/ledgr/billing) [![Code Coverage](https://scrutinizer-ci.com/g/ledgr/billing/badges/coverage.png?s=0a13eb6f754b0e90a8ffa9e633e768ccf006ece8)](https://scrutinizer-ci.com/g/ledgr/billing/)
+# ledgr/billing [![Latest Stable Version](https://poser.pugx.org/ledgr/billing/v/stable.png)](https://packagist.org/packages/ledgr/billing) [![Build Status](https://travis-ci.org/ledgr/billing.png?branch=master)](https://travis-ci.org/ledgr/billing) [![Code Coverage](https://scrutinizer-ci.com/g/ledgr/billing/badges/coverage.png?s=0a13eb6f754b0e90a8ffa9e633e768ccf006ece8)](https://scrutinizer-ci.com/g/ledgr/billing/) [![Dependency Status](https://gemnasium.com/ledgr/billing.png)](https://gemnasium.com/ledgr/billing)
 
 
 Data types for creating invoices.
