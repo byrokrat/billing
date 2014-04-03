@@ -118,7 +118,7 @@ class Invoice
         $this->ocr = $ocr;
 
         $this->vatTotal = new Amount('0');
-        $this->unitTotal = new AMount('0');
+        $this->unitTotal = new Amount('0');
 
         foreach ($posts as $post) {
             $this->addPost($post);
