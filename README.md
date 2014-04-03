@@ -3,8 +3,6 @@
 
 Data types for creating invoices.
 
-**License**: [GPL](/LICENSE)
-
 
 Installation using [composer](http://getcomposer.org/)
 ------------------------------------------------------

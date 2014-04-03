@@ -4,7 +4,7 @@
     "keywords": ["billing", "invoice", "OCR"],
     "homepage": "https://github.com/ledgr/billing",
     "type": "library",
-    "license": "GPL-3.0+",
+    "license": "WTFPL",
     "authors": [
         {
             "name": "Hannes Forsgård",
@@ -18,9 +18,10 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "ledgr/utils": "1.0.*",
-        "ledgr/id": "1.0.*",
-        "ledgr/banking": "1.0.*"
+        "ledgr/amount": "1.*",
+        "ledgr/checkdigit": "1.*",
+        "ledgr/id": "1.*",
+        "ledgr/banking": "1.*"
     },
     "suggest" : {
         "ledgr/paperinvoice": "Create paper (pdf) representations of invoices"
