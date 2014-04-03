@@ -7,13 +7,11 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace ledgr\billing\Exception;
-
-use ledgr\billing\Exception;
+namespace ledgr\billing;
 
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class InvalidStructureException extends Exception
+class RuntimeException extends \RuntimeException implements Exception
 {
 }

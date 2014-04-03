@@ -9,9 +9,6 @@
 
 namespace ledgr\billing;
 
-use ledgr\billing\Exception\InvalidStructureException;
-use ledgr\billing\Exception\InvalidLengthDigitException;
-use ledgr\billing\Exception\InvalidCheckDigitException;
 use ledgr\checkdigit\Modulo10;
 
 /**
@@ -31,10 +28,8 @@ class OCR
      * 
      * OCR must have a valid check and length digits
      *
-     * @param  string                      $ocr
-     * @throws InvalidStructureException   If ocr is not numerical or longer than 25 digits
-     * @throws InvalidLengthDigitException If length digit is invalid
-     * @throws InvalidCheckDigitException  If check digit is invalid
+     * @param  string           $ocr
+     * @throws RuntimeException If ocr is unvalid
      */
     public function __construct($ocr)
     {
@@ -44,7 +39,7 @@ class OCR
             || strlen($ocr) > 25
             || strlen($ocr) < 2
         ) {
-            throw new InvalidStructureException("\$ocr must be numeric and contain between 2 and 25 digits");
+            throw new RuntimeException("\$ocr must be numeric and contain between 2 and 25 digits");
         }
 
         $arOcr = str_split($ocr);
@@ -54,12 +49,12 @@ class OCR
 
         // Validate length digit
         if ($length != self::calcLengthDigit($base)) {
-            throw new InvalidLengthDigitException("Invalid length digit");
+            throw new RuntimeException("Invalid length digit");
         }
 
         // Validate check digit
         if ($check != Modulo10::getCheckDigit($base . $length)) {
-            throw new InvalidCheckDigitException("Invalid check digit");
+            throw new RuntimeException("Invalid check digit");
         }
 
         $this->ocr = $ocr;
@@ -90,14 +85,14 @@ class OCR
      * 
      * Check and length digits are appended
      *
-     * @param  string                    $nr
+     * @param  string           $nr
      * @return OCR
-     * @throws InvalidStructureException If $nr is invalid
+     * @throws RuntimeException If $nr is unvalid
      */
     public static function create($nr)
     {
         if (!is_string($nr) || !ctype_digit($nr) || strlen($nr) > 23) {
-            throw new InvalidStructureException("\$nr must be numeric and contain a maximum of 23 digits");
+            throw new RuntimeException("\$nr must be numeric and contain a maximum of 23 digits");
         }
 
         // Calculate and append length digit

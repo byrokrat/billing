@@ -10,7 +10,7 @@ class OCRTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception\InvalidStructureException
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testCreateInvalidLength()
     {
@@ -18,7 +18,7 @@ class OCRTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception\InvalidStructureException
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testCreateNotNumeric()
     {
@@ -47,7 +47,7 @@ class OCRTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception\InvalidStructureException
+     * @expectedException ledgr\billing\RuntimeException
      * @dataProvider invalidStructuresProvider
      */
     public function testSetInvalidStructure($ocr)
@@ -56,7 +56,7 @@ class OCRTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception\InvalidLengthDigitException
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testSetInvalidLengthDigit()
     {
@@ -64,7 +64,7 @@ class OCRTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception\InvalidCheckDigitException
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testSetInvalidCheckDigit()
     {

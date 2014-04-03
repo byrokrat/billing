@@ -143,7 +143,7 @@ class InvoiceBuilder
      * Get invoice serial number
      *
      * @return string
-     * @throws Exception If serial is not set
+     * @throws RuntimeException If serial is not set
      */
     public function getSerial()
     {
@@ -151,7 +151,7 @@ class InvoiceBuilder
             return $this->serial;
         }
 
-        throw new Exception("Unable to create Invoice: serial not set.");
+        throw new RuntimeException("Unable to create Invoice: serial not set.");
     }
 
     /**
@@ -170,7 +170,7 @@ class InvoiceBuilder
      * Get seller
      *
      * @return LegalPerson
-     * @throws Exception   If seller is not set
+     * @throws RuntimeException If seller is not set
      */
     public function getSeller()
     {
@@ -178,7 +178,7 @@ class InvoiceBuilder
             return $this->seller;
         }
 
-        throw new Exception("Unable to create Invoice: seller not set.");
+        throw new RuntimeException("Unable to create Invoice: seller not set.");
     }
 
     /**
@@ -197,7 +197,7 @@ class InvoiceBuilder
      * Get buyer
      *
      * @return LegalPerson
-     * @throws Exception   If buyer is not set
+     * @throws RuntimeException If buyer is not set
      */
     public function getBuyer()
     {
@@ -205,7 +205,7 @@ class InvoiceBuilder
             return $this->buyer;
         }
 
-        throw new Exception("Unable to create Invoice: buyer not set.");
+        throw new RuntimeException("Unable to create Invoice: buyer not set.");
     }
 
     /**
@@ -258,7 +258,7 @@ class InvoiceBuilder
      * Get invoice reference number
      *
      * @return OCR
-     * @throws Exception If ocr is not set or can not be generated
+     * @throws RuntimeException If ocr is not set or can not be generated
      */
     public function getOCR()
     {
@@ -270,7 +270,7 @@ class InvoiceBuilder
             return OCR::create($this->getSerial());
         }
 
-        throw new Exception("Unable to generate Invoice: OCR not set.");
+        throw new RuntimeException("Unable to generate Invoice: OCR not set.");
     }
 
     /**

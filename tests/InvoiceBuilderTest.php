@@ -8,7 +8,7 @@ use DateTime;
 class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException ledgr\billing\Exception
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testGetSerialException()
     {
@@ -17,7 +17,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testGetSellerException()
     {
@@ -26,7 +26,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testGetBuyerException()
     {
@@ -48,7 +48,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ledgr\billing\Exception
+     * @expectedException ledgr\billing\RuntimeException
      */
     public function testGetOcrException()
     {
