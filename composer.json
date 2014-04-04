@@ -24,6 +24,7 @@
         "ledgr/banking": "1.*"
     },
     "suggest" : {
-        "ledgr/paperinvoice": "Create paper (pdf) representations of invoices"
+        "ledgr/paperinvoice": "Create paper (pdf) representations of invoices",
+        "ledgr/autogiro": "Send invoices using the swedish autogiro banking system"
     }
 }
