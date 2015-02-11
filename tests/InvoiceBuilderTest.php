@@ -25,12 +25,6 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
         (new InvoiceBuilder)->getBuyer();
     }
 
-    public function testExceptionWhenOcrNotSet()
-    {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
-        (new InvoiceBuilder)->getOcr();
-    }
-
     public function testBillDate()
     {
         $builder = new InvoiceBuilder();
@@ -73,5 +67,16 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('message', $invoice->getMessage());
         $this->assertEquals('EUR', $invoice->getCurrency());
+    }
+
+    public function testGeneratingWithoutOcr()
+    {
+        $invoice = (new InvoiceBuilder)
+            ->setSerial('1')
+            ->setSeller(new LegalPerson('seller'))
+            ->setBuyer(new LegalPerson('buyer'))
+            ->getInvoice();
+
+        $this->assertNull($invoice->getOcr());
     }
 }

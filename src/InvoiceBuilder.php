@@ -238,8 +238,7 @@ class InvoiceBuilder
     /**
      * Get invoice reference number
      *
-     * @return Ocr
-     * @throws RuntimeException If ocr is not set or can not be generated
+     * @return Ocr|null Null if ocr is not set
      */
     public function getOcr()
     {
@@ -250,8 +249,6 @@ class InvoiceBuilder
         if ($this->generateOcr) {
             return (new OcrFactory)->createOcr($this->getSerial());
         }
-
-        throw new RuntimeException("Unable to generate Invoice: OCR not set.");
     }
 
     /**
