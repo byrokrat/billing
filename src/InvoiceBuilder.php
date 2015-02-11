@@ -16,12 +16,12 @@ class InvoiceBuilder
     private $serial;
 
     /**
-     * @var LegalPerson Seller
+     * @var Seller Registered seller
      */
     private $seller;
 
     /**
-     * @var LegalPerson Buyer
+     * @var Buyer Registered buyer
      */
     private $buyer;
 
@@ -144,10 +144,10 @@ class InvoiceBuilder
     /**
      * Set seller
      *
-     * @param  LegalPerson    $seller
+     * @param  Seller         $seller
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setSeller(LegalPerson $seller)
+    public function setSeller(Seller $seller)
     {
         $this->seller = $seller;
         return $this;
@@ -156,7 +156,7 @@ class InvoiceBuilder
     /**
      * Get seller
      *
-     * @return LegalPerson
+     * @return Seller
      * @throws RuntimeException If seller is not set
      */
     public function getSeller()
@@ -170,10 +170,10 @@ class InvoiceBuilder
     /**
      * Set buyer
      *
-     * @param  LegalPerson    $buyer
+     * @param  Buyer          $buyer
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setBuyer(LegalPerson $buyer)
+    public function setBuyer(Buyer $buyer)
     {
         $this->buyer = $buyer;
         return $this;
@@ -182,7 +182,7 @@ class InvoiceBuilder
     /**
      * Get buyer
      *
-     * @return LegalPerson
+     * @return Buyer
      * @throws RuntimeException If buyer is not set
      */
     public function getBuyer()

@@ -13,8 +13,8 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->builder = (new InvoiceBuilder)
             ->setSerial('1')
-            ->setSeller(new LegalPerson('seller'))
-            ->setBuyer(new LegalPerson('buyer'));
+            ->setSeller($this->getMock('byrokrat\billing\Seller'))
+            ->setBuyer($this->getMock('byrokrat\billing\Buyer'));
     }
 
     public function testExceptionWhenSerialNotSet()

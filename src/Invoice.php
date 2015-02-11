@@ -17,12 +17,12 @@ class Invoice
     private $serial;
 
     /**
-     * @var LegalPerson Seller
+     * @var Seller Registered seller
      */
     private $seller;
 
     /**
-     * @var LegalPerson Buyer
+     * @var Buyer Registered buyer
      */
     private $buyer;
 
@@ -65,8 +65,8 @@ class Invoice
      * Construct invoice
      *
      * @param string        $serial       Invoice serial number
-     * @param LegalPerson   $seller       Seller object
-     * @param LegalPerson   $buyer        Buyer object
+     * @param Seller        $seller       Registered seller
+     * @param Buyer         $buyer        Registered buyer
      * @param string        $message      Invoice message
      * @param Ocr|null      $ocr          Payment reference number
      * @param Item[]        $items        Array of charged items
@@ -77,8 +77,8 @@ class Invoice
      */
     public function __construct(
         $serial,
-        LegalPerson $seller,
-        LegalPerson $buyer,
+        Seller $seller,
+        Buyer $buyer,
         $message = '',
         Ocr $ocr = null,
         array $items = array(),
@@ -116,7 +116,7 @@ class Invoice
     /**
      * Get seller
      *
-     * @return LegalPerson
+     * @return Seller
      */
     public function getSeller()
     {
@@ -126,7 +126,7 @@ class Invoice
     /**
      * Get buyer
      *
-     * @return LegalPerson
+     * @return Buyer
      */
     public function getBuyer()
     {
@@ -227,7 +227,6 @@ class Invoice
      */
     public function getVatTotals()
     {
-        // TODO bättre namn tack!!
         $vatTotals = [];
 
         foreach ($this->getItems() as $item) {

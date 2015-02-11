@@ -11,8 +11,8 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
     {
         return new Invoice(
             '1',
-            new LegalPerson('seller'),
-            new LegalPerson('buyer'),
+            $this->getMock('byrokrat\billing\Seller'),
+            $this->getMock('byrokrat\billing\Buyer'),
             'message',
             new Ocr('133'),
             $this->getItems(),
@@ -77,12 +77,18 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSeller()
     {
-        $this->assertEquals('seller', $this->getInvoice()->getSeller()->getName());
+        $this->assertInstanceOf(
+            'byrokrat\billing\Seller',
+            $this->getInvoice()->getSeller()
+        );
     }
 
     public function testGetBuyer()
     {
-        $this->assertEquals('buyer', $this->getInvoice()->getBuyer()->getName());
+        $this->assertInstanceOf(
+            'byrokrat\billing\Buyer',
+            $this->getInvoice()->getBuyer()
+        );
     }
 
     public function testGetBillDate()

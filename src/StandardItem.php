@@ -5,7 +5,7 @@ namespace byrokrat\billing;
 use byrokrat\amount\Amount;
 
 /**
- * Standard item implementation
+ * Basic item implementation
  */
 class StandardItem implements Item
 {
@@ -81,7 +81,7 @@ class StandardItem implements Item
      * Get VAT rate
      *
      * {@inheritdoc}
-     * 
+     *
      * @return Amount
      */
     public function getVatRate()

@@ -17,10 +17,9 @@ composer require byrokrat/billing
 
 Usage
 -----
-[`Item`](/src/Item.php) represents a purchased item.
-
 ```php
 use byrokrat\billing\StandardItem;
+use byrokrat\amount\Amount;
 
 // 1 unit of a 100 EUR item with 25% VAT
 $item = new StandardItem(
@@ -35,11 +34,12 @@ The simplest way to create invoices is by using the [`InvoiceBuilder`](/src/Invo
 
 ```php
 use byrokrat\billing\InvoiceBuilder;
+use byrokrat\billing\StandardActor;
 
 $invoice = (new InvoiceBuilder)
     ->setSerial('1')
-    ->setSeller(new LegalPerson('Company X', ...))
-    ->setBuyer(new LegalPerson('Mrs Y', ...))
+    ->setSeller(new StandardActor('Company X'))
+    ->setBuyer(new StandardActor('Mrs Y'))
     ->setMessage('Pay in time or else!')
     ->generateOcr()
     ->addItem($item)
@@ -47,13 +47,24 @@ $invoice = (new InvoiceBuilder)
     ->buildInvoice();
 ```
 
-[`Invoice`](/src/Invoice.php) represents the actual invoice. Se the class
-definition for a complete list of access methods.
+[`Invoice`](/src/Invoice.php) represents the actual invoice.
 
 ```php
 echo $invoice->getInvoiceTotal();
 // prints 125 (100 EUR plus 25% VAT)
 ```
+
+### Using the billing interfaces
+
+Billing uses an interface centered design:
+
+* [`Item`](/src/Item.php) represents a purchased item
+* [`Seller`](/src/Seller.php) represents the selling party
+* [`Buyer`](/src/Buyer.php) represents the buying party
+
+[`StandardItem`](/src/StandardItem.php) and [`StandardActor`](/src/StandardActor.php)
+offers simple implementations of these interfaces, but you may of course provide your
+own implementations and extend the interfaces as needed.
 
 Credits
 -------
