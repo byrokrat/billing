@@ -177,23 +177,7 @@ class Invoice
     }
 
     /**
-     * Get total VAT amount
-     *
-     * @return Amount
-     */
-    public function getTotalVatCost()
-    {
-        return array_reduce(
-            $this->getItems(),
-            function (Amount $carry, Item $item) {
-                return $carry->add($item->getTotalVatCost());
-            },
-            new Amount('0')
-        );
-    }
-
-    /**
-     * Get total unit amount (VAT excluded)
+     * Get total cost of all items (VAT excluded)
      *
      * @return Amount
      */
@@ -209,11 +193,27 @@ class Invoice
     }
 
     /**
+     * Get total VAT cost for all items
+     *
+     * @return Amount
+     */
+    public function getTotalVatCost()
+    {
+        return array_reduce(
+            $this->getItems(),
+            function (Amount $carry, Item $item) {
+                return $carry->add($item->getTotalVatCost());
+            },
+            new Amount('0')
+        );
+    }
+
+    /**
      * Get charged amount (VAT included)
      *
      * @return Amount
      */
-    public function getInvoiceTotal()
+    public function getTotalCost()
     {
         return $this->getTotalVatCost()
             ->add($this->getTotalUnitCost())
@@ -221,20 +221,20 @@ class Invoice
     }
 
     /**
-     * Get unit cost totals for non-zero vat rates used in invoice
+     * Get charged vat amounts for non-zero vat rates
      *
      * @return Item[]
      */
-    public function getVatTotals()
+    public function getVatRates()
     {
-        $vatTotals = [];
+        $rates = [];
 
         foreach ($this->getItems() as $item) {
             if ($item->getVatRate()->isPositive()) {
                 $key = (string)$item->getVatRate();
 
-                if (!array_key_exists($key, $vatTotals)) {
-                    $vatTotals[$key] = new StandardItem(
+                if (!array_key_exists($key, $rates)) {
+                    $rates[$key] = new StandardItem(
                         '',
                         new Amount('1'),
                         new Amount('0'),
@@ -242,18 +242,17 @@ class Invoice
                     );
                 }
 
-                $vatTotals[$key] = new StandardItem(
-                    $vatTotals[$key]->getDescription(),
-                    $vatTotals[$key]->getNrOfUnits(),
-                    $vatTotals[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
-                    $vatTotals[$key]->getVatRate()
+                $rates[$key] = new StandardItem(
+                    $rates[$key]->getDescription(),
+                    $rates[$key]->getNrOfUnits(),
+                    $rates[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
+                    $rates[$key]->getVatRate()
                 );
             }
         }
 
-        ksort($vatTotals);
-
-        return array_values($vatTotals);
+        ksort($rates);
+        return array_values($rates);
     }
 
     /**

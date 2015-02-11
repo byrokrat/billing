@@ -66,6 +66,29 @@ Billing uses an interface centered design:
 offers simple implementations of these interfaces, but you may of course provide your
 own implementations and extend the interfaces as needed.
 
+### The invoice api
+
+[`Invoice`](/src/Invoice.php) defines the following api:
+
+Method signature    | returns  | description
+:------------------ | :------- | :----------------------------------------------------
+getSerial()         | string   | Get invoice serial number
+getSeller()         | Seller   | Get registered seller
+getBuyer()          | Buyer    | Get registered buyer
+getMessage()        | string   | Get invoice message
+getOcr()            | Ocr|null | Get invoice reference number
+addItem(Item $item) | null     | Add item to invoice
+getItems()          | Item[]   | Get list of charged items
+getTotalUnitCost()  | Amount   | Get total cost of all items (VAT excluded)
+getTotalVatCost()   | Amount   | Get total VAT cost for all items
+getTotalCost()      | Amount   | Get charged amount (VAT included)
+getVatRates()       | Item[]   | Get charged vat amounts for non-zero vat rates
+getBillDate()       | DateTime | Get date of invoice creation
+getExpiresAfter()   | integer  | Get number of days before invoice expires
+getExpirationDate() | DateTime | Get date when invoice expires
+getDeduction()      | Amount   | Get prepaid amound to deduct
+getCurrency()       | string   | Get 3-letter ISO 4217 code indicating invoice currency
+
 Credits
 -------
 Billing is covered under the [WTFPL](http://www.wtfpl.net/)

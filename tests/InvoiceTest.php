@@ -56,18 +56,17 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', (string)$this->getInvoice()->getTotalUnitCost());
     }
 
-    public function testGetInvoiceTotal()
+    public function testGetTotalCost()
     {
-        $this->assertEquals('125', (string)$this->getInvoice()->getInvoiceTotal());
+        $this->assertEquals('125', (string)$this->getInvoice()->getTotalCost());
     }
 
-    public function testGetVatTotals()
+    public function testGetVatRates()
     {
         // Second item has VAT 0 and should not be included
         $rates = $this->getItems();
         array_pop($rates);
-
-        $this->assertEquals($rates, $this->getInvoice()->getVatTotals());
+        $this->assertEquals($rates, $this->getInvoice()->getVatRates());
     }
 
     public function testGetSerial()

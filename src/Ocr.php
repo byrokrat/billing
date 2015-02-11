@@ -7,7 +7,7 @@ namespace byrokrat\billing;
  */
 class Ocr
 {
-    use OcrHelperTrait;
+    use OcrHelper;
 
     /**
      * @var string Internal representation

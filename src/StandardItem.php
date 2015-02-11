@@ -9,7 +9,7 @@ use byrokrat\amount\Amount;
  */
 class StandardItem implements Item
 {
-    use ItemTrait;
+    use ItemHelper;
 
     /**
      * @var string Post description

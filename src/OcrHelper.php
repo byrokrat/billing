@@ -7,7 +7,7 @@ use byrokrat\checkdigit\Luhn;
 /**
  * Helpers to work with check- and length digits in ocr numbers
  */
-trait OcrHelperTrait
+trait OcrHelper
 {
     /**
      * @var Luhn Checksum calculator

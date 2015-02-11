@@ -7,7 +7,7 @@ use byrokrat\amount\Amount;
 /**
  * Helper that defines totals calculations for item implementations
  */
-trait ItemTrait
+trait ItemHelper
 {
     /**
      * Get number of units

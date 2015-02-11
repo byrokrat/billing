@@ -7,7 +7,7 @@ namespace byrokrat\billing;
  */
 class OcrFactory
 {
-    use OcrHelperTrait;
+    use OcrHelper;
 
     /**
      * Create new ocr from raw number
