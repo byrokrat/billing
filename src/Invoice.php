@@ -1,22 +1,13 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
 use DateTime;
 use DateInterval;
-use ledgr\amount\Amount;
+use byrokrat\amount\Amount;
 
 /**
  * Generic invoice container object
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Invoice
 {
@@ -24,21 +15,6 @@ class Invoice
      * @var string Invoice serial number
      */
     private $serial;
-
-    /**
-     * @var OCR Payment reference number
-     */
-    private $ocr;
-
-    /**
-     * @var DateTime Invoice creation date
-     */
-    private $billDate;
-
-    /**
-     * @var int Number of days before invoice expires
-     */
-    private $paymentTerm;
 
     /**
      * @var LegalPerson Seller
@@ -51,83 +27,80 @@ class Invoice
     private $buyer;
 
     /**
-     * @var Amount Deduction of total cost
-     */
-    private $deduction;
-
-    /**
      * @var string Message to buyer
      */
     private $message;
 
     /**
-     * @var array Collection of InvoicePost objects
+     * @var Ocr Payment reference number
      */
-    private $posts = array();
+    private $ocr;
 
     /**
-     * @var string 3-letter ISO 4217 currency code indicating the currency to use
+     * @var InvoicePost[] List if invoice posts
      */
-    private $currency = 'SEK';
+    private $posts = [];
 
     /**
-     * @var Amount Accumulated invoice VAT
+     * @var DateTime Creation date
      */
-    private $vatTotal;
+    private $billDate;
 
     /**
-     * @var Amount Accumulated invoice unit cost
+     * @var integer Number of days before invoice expires
      */
-    private $unitTotal;
+    private $expiresAfter;
 
     /**
-     * @var array Array of InvoicePost objects of VAT rates used in invoice
+     * @var Amount Prepaid amound to deduct
      */
-    private $vatRates = array();
+    private $deduction;
+
+    /**
+     * @var string 3-letter ISO 4217 currency code indicating currency
+     */
+    private $currency;
 
     /**
      * Construct invoice
      *
-     * @param string      $serial      Invoice serial number
-     * @param LegalPerson $seller
-     * @param LegalPerson $buyer
-     * @param DateTime    $billDate    Date of invoice creation
-     * @param OCR         $ocr         Payment reference number
-     * @param array       $posts       Array of InvoicePost objects
-     * @param string      $message     Invoice message
-     * @param integer     $paymentTerm Nr of days before invoice expires
-     * @param Amount      $deduction   Prepaid amound to deduct
-     * @param string      $currency    3-letter ISO 4217 currency code indicating the currency to use
+     * @param string        $serial       Invoice serial number
+     * @param LegalPerson   $seller       Seller object
+     * @param LegalPerson   $buyer        Buyer object
+     * @param string        $message      Invoice message
+     * @param Ocr           $ocr          Payment reference number
+     * @param InvoicePost[] $posts        Array of InvoicePost objects
+     * @param DateTime      $billDate     Date of invoice creation
+     * @param integer       $expiresAfter Nr of days before invoice expires
+     * @param Amount        $deduction    Prepaid amound to deduct
+     * @param string        $currency     3-letter ISO 4217 currency code indicating currency
      */
     public function __construct(
         $serial,
         LegalPerson $seller,
         LegalPerson $buyer,
-        DateTime $billDate,
-        OCR $ocr,
-        array $posts,
         $message = '',
-        $paymentTerm = 30,
+        Ocr $ocr = null,
+        array $posts = array(),
+        DateTime $billDate = null,
+        $expiresAfter = 30,
         Amount $deduction = null,
         $currency = 'SEK'
     ) {
-        $this->serial = (string)$serial;
+        $this->serial = $serial;
         $this->seller = $seller;
         $this->buyer = $buyer;
-        $this->billDate = $billDate;
-        $this->ocr = $ocr;
-
-        $this->vatTotal = new Amount('0');
-        $this->unitTotal = new Amount('0');
 
         foreach ($posts as $post) {
             $this->addPost($post);
         }
 
-        $this->message = (string)$message;
-        $this->paymentTerm = (int)$paymentTerm;
+        $this->ocr = $ocr;
+        $this->message = $message;
+        $this->billDate = $billDate ?: new DateTime;
+        $this->expiresAfter = $expiresAfter;
         $this->deduction = $deduction ?: new Amount('0');
-        $this->currency = (string)$currency;
+        $this->currency = $currency;
     }
 
     /**
@@ -161,26 +134,6 @@ class Invoice
     }
 
     /**
-     * Get date of invoice creation
-     *
-     * @return DateTime
-     */
-    public function getBillDate()
-    {
-        return $this->billDate;
-    }
-
-    /**
-     * Get invoice reference number
-     *
-     * @return OCR
-     */
-    public function getOCR()
-    {
-        return $this->ocr;
-    }
-
-    /**
      * Get invoice message
      *
      * @return string
@@ -191,13 +144,136 @@ class Invoice
     }
 
     /**
+     * Get invoice reference number
+     *
+     * Returns null if no ocr was specified
+     *
+     * @return Ocr|null
+     */
+    public function getOcr()
+    {
+        return $this->ocr;
+    }
+
+    /**
+     * Add post to invoice
+     *
+     * @param  InvoicePost $post
+     * @return null
+     */
+    public function addPost(InvoicePost $post)
+    {
+        $this->posts[] = $post;
+    }
+
+    /**
+     * Get list of invoice posts
+     *
+     * @return InvoicePost[]
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * Get total VAT amount
+     *
+     * @return Amount
+     */
+    public function getVatTotal()
+    {
+        return array_reduce(
+            $this->getPosts(),
+            function (Amount $carry, InvoicePost $post) {
+                return $carry->add($post->getVatTotal());
+            },
+            new Amount('0')
+        );
+    }
+
+    /**
+     * Get total unit amount (VAT excluded)
+     *
+     * @return Amount
+     */
+    public function getUnitTotal()
+    {
+        return array_reduce(
+            $this->getPosts(),
+            function (Amount $carry, InvoicePost $post) {
+                return $carry->add($post->getUnitTotal());
+            },
+            new Amount('0')
+        );
+    }
+
+    /**
+     * Get charged amount (VAT included)
+     *
+     * @return Amount
+     */
+    public function getInvoiceTotal()
+    {
+        return $this->getVatTotal()
+            ->add($this->getUnitTotal())
+            ->subtract($this->getDeduction());
+    }
+
+    /**
+     * Get unit cost totals for non-zero vat rates used in invoice
+     *
+     * @return InvoicePost[]
+     */
+    public function getVatTotals()
+    {
+        $vatTotals = [];
+
+        foreach ($this->getPosts() as $post) {
+            if ($post->getVatRate()->isPositive()) {
+                $key = (string)$post->getVatRate();
+
+                if (!array_key_exists($key, $vatTotals)) {
+                    $vatTotals[$key] = new InvoicePost(
+                        '',
+                        new Amount('1'),
+                        new Amount('0'),
+                        $post->getVatRate()
+                    );
+                }
+
+                $vatTotals[$key] = new InvoicePost(
+                    $vatTotals[$key]->getDescription(),
+                    $vatTotals[$key]->getNrOfUnits(),
+                    $vatTotals[$key]->getUnitCost()->add($post->getUnitTotal()),
+                    $vatTotals[$key]->getVatRate()
+                );
+            }
+        }
+
+        ksort($vatTotals);
+
+        return array_values($vatTotals);
+    }
+
+    /**
+     * Get date of invoice creation
+     *
+     * @return DateTime
+     */
+    public function getBillDate()
+    {
+        return $this->billDate;
+    }
+
+    /**
      * Get number of days before invoice expires
      *
-     * @return int Number of days
+     * @return integer
      */
-    public function getPaymentTerm()
+    public function getExpiresAfter()
     {
-        return $this->paymentTerm;
+        return $this->expiresAfter;
     }
 
     /**
@@ -208,13 +284,13 @@ class Invoice
     public function getExpirationDate()
     {
         $expireDate = clone $this->billDate;
-        $expireDate->add(new DateInterval("P{$this->getPaymentTerm()}D"));
+        $expireDate->add(new DateInterval("P{$this->getExpiresAfter()}D"));
 
         return $expireDate;
     }
 
     /**
-     * Get deduction (amount prepaid)
+     * Get prepaid amound to deduct
      *
      * @return Amount
      */
@@ -231,90 +307,5 @@ class Invoice
     public function getCurrency()
     {
         return $this->currency;
-    }
-
-    /**
-     * Get list of registered posts
-     *
-     * @return array
-     */
-    public function getPosts()
-    {
-        return $this->posts;
-    }
-
-    /**
-     * Get total VAT amount
-     *
-     * @return Amount
-     */
-    public function getVatTotal()
-    {
-        return $this->vatTotal;
-    }
-
-    /**
-     * Get total unit amount (VAT excluded)
-     *
-     * @return Amount
-     */
-    public function getUnitTotal()
-    {
-        return $this->unitTotal;
-    }
-
-    /**
-     * Get charged amount (VAT included)
-     *
-     * @return Amount
-     */
-    public function getInvoiceTotal()
-    {
-        return $this->getVatTotal()
-            ->add($this->getUnitTotal())
-            ->subtract($this->getDeduction());
-    }
-
-    /**
-     * Get summations for vat rates used in invoice
-     *
-     * @return array Array of InvoicePost objects
-     */
-    public function getVatRates()
-    {
-        ksort($this->vatRates);
-        return array_values($this->vatRates);
-    }
-
-
-    /**
-     * Add post to invoice
-     *
-     * @param  InvoicePost $post
-     * @return void
-     */
-    private function addPost(InvoicePost $post)
-    {
-        $this->posts[] = $post;
-
-        // Cache VAT and unit totals
-        $this->vatTotal->add($post->getVatTotal());
-        $this->unitTotal->add($post->getUnitTotal());
-
-        // Cache used VAT rates
-        if ($post->getVatRate()->hasValue()) {
-            $key = (string)$post->getVatRate();
-
-            if (!array_key_exists($key, $this->vatRates)) {
-                $this->vatRates[$key] = new InvoicePost(
-                    '',
-                    new Amount('1'),
-                    new Amount('0'),
-                    $post->getVatRate()
-                );
-            }
-
-            $this->vatRates[$key]->getUnitCost()->add($post->getUnitTotal());
-        }
     }
 }

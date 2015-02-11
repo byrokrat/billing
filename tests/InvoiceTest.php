@@ -1,8 +1,8 @@
 <?php
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
-use ledgr\amount\Amount;
+use byrokrat\amount\Amount;
 use DateTime;
 
 class InvoiceTest extends \PHPUnit_Framework_TestCase
@@ -13,10 +13,10 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
             '1',
             new LegalPerson('seller'),
             new LegalPerson('buyer'),
-            new DateTime('2014-01-01'),
-            new OCR('133'),
-            $this->getPosts(),
             'message',
+            new Ocr('133'),
+            $this->getPosts(),
+            new DateTime('2014-01-01'),
             1,
             new Amount('100'),
             'SEK'
@@ -25,7 +25,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     private function getPosts()
     {
-        return array(
+        return [
             new InvoicePost(
                 '',
                 new Amount('1'),
@@ -38,7 +38,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
                 new Amount('50', 2),
                 new Amount('0', 2)
             )
-        );
+        ];
     }
 
     public function testGetPosts()
@@ -61,13 +61,13 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('125', (string)$this->getInvoice()->getInvoiceTotal());
     }
 
-    public function testGetVatRates()
+    public function testGetVatTotals()
     {
         // Second post has VAT 0 and should not be included
         $rates = $this->getPosts();
         array_pop($rates);
 
-        $this->assertEquals($rates, $this->getInvoice()->getVatRates());
+        $this->assertEquals($rates, $this->getInvoice()->getVatTotals());
     }
 
     public function testGetSerial()
@@ -92,7 +92,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetOcr()
     {
-        $this->assertEquals(new OCR('133'), $this->getInvoice()->getOCR());
+        $this->assertEquals(new Ocr('133'), $this->getInvoice()->getOcr());
     }
 
     public function testGetMessage()
@@ -100,9 +100,9 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('message', $this->getInvoice()->getMessage());
     }
 
-    public function testGetPaymentTerm()
+    public function testGetExpiresAfter()
     {
-        $this->assertEquals(1, $this->getInvoice()->getPaymentTerm());
+        $this->assertEquals(1, $this->getInvoice()->getExpiresAfter());
     }
 
     public function testGetExpirationDate()

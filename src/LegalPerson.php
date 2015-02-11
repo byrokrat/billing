@@ -1,26 +1,16 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
-use ledgr\id\IdInterface;
-use ledgr\id\NullId;
-use ledgr\banking\BankAccountInterface;
-use ledgr\banking\NullAccount;
+use byrokrat\id\Id;
+use byrokrat\id\NullId;
+use byrokrat\banking\AccountNumber;
 
 /**
  * A LegalPerson is a container for id, accounts and more
  *
  * Legal persons are of two kinds: natural persons (people) and juridical persons,
- * groups of people, such as corporations, which are treated by law as if they were persons.
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
+ * organizations which are treated by law as if they were persons.
  */
 class LegalPerson
 {
@@ -30,12 +20,12 @@ class LegalPerson
     private $name;
 
     /**
-     * @var IdInterface Personal identifier
+     * @var Id Personal identifier
      */
-    private $id;
+    private $legalId;
 
     /**
-     * @var BankAccountInterface Account registered with person
+     * @var AccountNumber Account registered with person
      */
     private $account;
 
@@ -45,40 +35,40 @@ class LegalPerson
     private $customerNr;
 
     /**
-     * @var boolean Flag if this person is a corporation
+     * @var boolean Flag if this is an organization
      */
-    private $corporation = false;
+    private $isOrg;
 
     /**
-     * @var string Optional VAT number for corporations
+     * @var string Optional VAT number for organizations
      */
     private $vatNr = '';
 
     /**
      * Construct legal person container
      *
-     * @param string               $name        Name of legal person
-     * @param IdInterface          $id          Peronal identifier
-     * @param BankAccountInterface $account     Account number
-     * @param string               $customerNr  Customer number for billing
-     * @param boolean              $corporation Flag if person is a corporation
-     * @param boolean              $vat         Flag if corporation is registered for VAT
+     * @param string        $name       Name of legal person
+     * @param Id            $legalId    Peronal identifier
+     * @param AccountNumber $account    Account number
+     * @param string        $customerNr Customer number for billing
+     * @param boolean       $isOrg      Flag if this is an organization
+     * @param boolean       $isVat      Flag if organization is registered for VAT
      */
     public function __construct(
         $name,
-        IdInterface $id = null,
-        BankAccountInterface $account = null,
+        Id $legalId = null,
+        AccountNumber $account = null,
         $customerNr = '',
-        $corporation = false,
-        $vat = false
+        $isOrg = false,
+        $isVat = ''
     ) {
-        $this->name = (string)$name;
-        $this->id = $id;
-        $this->account = $account;
-        $this->customerNr = (string)$customerNr;
-        $this->corporation = (bool)$corporation;
-        if ($corporation && $vat) {
-            $this->vatNr = str_replace(array('-', '+'), '', "SE{$id}01");
+        $this->name = $name;
+        $this->legalId = $legalId ?: new NullId;
+        $this->account = $account ?: new NullAccount;
+        $this->customerNr = $customerNr;
+        $this->isOrg = $isOrg;
+        if ($isOrg && $isVat) {
+            $this->vatNr = str_replace(['-', '+'], '', "SE{$legalId}01");
         }
     }
 
@@ -95,21 +85,21 @@ class LegalPerson
     /**
      * Get personal identifier
      *
-     * @return IdInterface
+     * @return Id
      */
     public function getId()
     {
-        return $this->id ?: new NullId;
+        return $this->legalId;
     }
 
     /**
      * Get account
      *
-     * @return BankAccountInterface
+     * @return AccountNumber
      */
     public function getAccount()
     {
-        return $this->account ?: new NullAccount;
+        return $this->account;
     }
 
     /**
@@ -123,24 +113,72 @@ class LegalPerson
     }
 
     /**
-     * Check if person is corporation
+     * Check if person is an organization
      *
      * @return boolean
      */
-    public function isCorporation()
+    public function isOrganization()
     {
-        return $this->corporation;
+        return $this->isOrg;
     }
 
     /**
      * Get swedish VAT number
      *
      * @see http://sv.wikipedia.org/wiki/Momsregistreringsnummer
-     * 
+     *
      * @return string VAT number
      */
     public function getVatNr()
     {
         return $this->vatNr;
+    }
+}
+
+class NullAccount implements \byrokrat\banking\AccountNumber
+{
+    public function getBankName()
+    {
+        return '';
+    }
+
+    public function getRawNumber()
+    {
+        return '';
+    }
+
+    public function getNumber()
+    {
+        return '';
+    }
+
+    public function __toString()
+    {
+        return '';
+    }
+
+    public function getClearingNumber()
+    {
+        return '';
+    }
+
+    public function getClearingCheckDigit()
+    {
+        return '';
+    }
+
+    public function getSerialNumber()
+    {
+        return '';
+    }
+
+    public function getCheckDigit()
+    {
+        return '';
+    }
+
+    public function get16()
+    {
+        return '';
     }
 }

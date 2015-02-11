@@ -1,8 +1,8 @@
 {
-    "name": "ledgr/billing",
-    "description": "Invoice and support classes",
+    "name": "byrokrat/billing",
+    "description": "Data types for creating invoices",
     "keywords": ["billing", "invoice", "OCR"],
-    "homepage": "https://github.com/ledgr/billing",
+    "homepage": "https://github.com/byrokrat/billing",
     "type": "library",
     "license": "WTFPL",
     "authors": [
@@ -13,18 +13,18 @@
     ],
     "autoload": {
         "psr-4": {
-            "ledgr\\billing\\": "src/"
+            "byrokrat\\billing\\": "src/"
         }
     },
     "require": {
-        "php": ">=5.3.0",
-        "ledgr/amount": "1.*",
-        "ledgr/checkdigit": "1.*",
-        "ledgr/id": "1.*",
-        "ledgr/banking": "1.*"
+        "php": ">=5.4",
+        "byrokrat/amount": "~1.0",
+        "byrokrat/checkdigit": "~1.0",
+        "byrokrat/id": "~1.0",
+        "byrokrat/banking": "~1.0"
     },
     "suggest" : {
-        "ledgr/paperinvoice": "Create paper (pdf) representations of invoices",
-        "ledgr/autogiro": "Send invoices using the swedish autogiro banking system"
+        "byrokrat/paperinvoice": "Create paper (pdf) representations of invoices",
+        "byrokrat/autogiro": "Send invoices using the swedish autogiro banking system"
     }
 }

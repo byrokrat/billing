@@ -1,44 +1,63 @@
 <?php
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
-use ledgr\amount\Amount;
+use byrokrat\amount\Amount;
 
 class InvoicePostTest extends \PHPUnit_Framework_TestCase
 {
+    private $post;
+
+    protected function setup()
+    {
+        $this->post = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
+    }
+
     public function testGetDescription()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals('desc', $p->getDescription());
+        $this->assertEquals(
+            'desc',
+            $this->post->getDescription()
+        );
     }
 
     public function testGetNrOfUnits()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals(new Amount('2'), $p->getNrOfUnits());
+        $this->assertEquals(
+            new Amount('2'),
+            $this->post->getNrOfUnits()
+        );
     }
 
     public function testGetUnitCost()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals(new Amount('100'), $p->getUnitCost());
+        $this->assertEquals(
+            new Amount('100'),
+            $this->post->getUnitCost()
+        );
     }
 
     public function testGetUnitTotal()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals('200', (string)$p->getUnitTotal());
+        $this->assertEquals(
+            '200',
+            $this->post->getUnitTotal()
+        );
     }
 
     public function testGetVatRate()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals(new Amount('.25'), $p->getVatRate());
+        $this->assertEquals(
+            new Amount('.25'),
+            $this->post->getVatRate()
+        );
     }
 
     public function testGetVatTotal()
     {
-        $p = new InvoicePost('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
-        $this->assertEquals('50', (string)$p->getVatTotal());
+        $this->assertEquals(
+            '50',
+            $this->post->getVatTotal()
+        );
     }
 }

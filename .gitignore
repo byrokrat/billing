@@ -1,5 +1,4 @@
-/build/*
+/build*
 /vendor
 /composer.phar
 /composer.lock
-/scrutinizer.phar

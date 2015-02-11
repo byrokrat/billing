@@ -1,20 +1,11 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
-use ledgr\amount\Amount;
+use byrokrat\amount\Amount;
 
 /**
- * An InvoicePost reresents a charged item, it's unit cost and VAT rate
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
+ * Represents a charged item, it's unit cost and VAT rate
  */
 class InvoicePost
 {
@@ -41,14 +32,14 @@ class InvoicePost
     /**
      * Constructor
      *
-     * @param string $desc     Post description
-     * @param Amount $units    Number of units
-     * @param Amount $unitCost Cost per unit
-     * @param Amount $vat      VAT rate, note that for 25% the value should be .25
+     * @param string $description Post description
+     * @param Amount $units       Number of units
+     * @param Amount $unitCost    Cost per unit
+     * @param Amount $vat         VAT rate, note that for 25% the value should be .25
      */
-    public function __construct($desc, Amount $units, Amount $unitCost, Amount $vat = null)
+    public function __construct($description, Amount $units, Amount $unitCost, Amount $vat = null)
     {
-        $this->description = (string)$desc;
+        $this->description = $description;
         $this->units = $units;
         $this->unitCost = $unitCost;
         $this->vat = $vat ?: new Amount('0');
@@ -91,8 +82,7 @@ class InvoicePost
      */
     public function getUnitTotal()
     {
-        $cost = clone $this->getUnitCost();
-        return $cost->multiplyWith($this->getNrOfUnits());
+        return $this->getUnitCost()->multiplyWith($this->getNrOfUnits());
     }
 
     /**

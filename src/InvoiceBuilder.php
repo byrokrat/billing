@@ -1,21 +1,12 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace ledgr\billing;
+namespace byrokrat\billing;
 
 use DateTime;
-use ledgr\amount\Amount;
+use byrokrat\amount\Amount;
 
 /**
- * Interface for creating Invoices
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
+ * Create complex invoices
  */
 class InvoiceBuilder
 {
@@ -25,14 +16,14 @@ class InvoiceBuilder
     private $serial;
 
     /**
-     * @var OCR Payment reference number
+     * @var Ocr Payment reference number
      */
     private $ocr;
 
     /**
-     * @var boolean Flag if OCR may be generated from serial
+     * @var boolean Flag if ocr may be generated from serial
      */
-    private $generateOCR = false;
+    private $generateOcr = false;
 
     /**
      * @var LegalPerson Seller
@@ -50,9 +41,9 @@ class InvoiceBuilder
     private $billDate;
 
     /**
-     * @var int Number of days before invoice expires
+     * @var integer Number of days before invoice expires
      */
-    private $paymentTerm = 30;
+    private $expiresAfter = 30;
 
     /**
      * @var Amount Deduction of total cost
@@ -67,7 +58,7 @@ class InvoiceBuilder
     /**
      * @var array Collection of InvoicePost objects
      */
-    private $posts = array();
+    private $posts = [];
 
     /**
      * @var string 3-letter ISO 4217 currency code indicating the currency to use
@@ -75,17 +66,7 @@ class InvoiceBuilder
     private $currency = 'SEK';
 
     /**
-     * Create builder
-     *
-     * @return InvoiceBuilder
-     */
-    public static function create()
-    {
-        return new InvoiceBuilder();
-    }
-
-    /**
-     * Construct invoice
+     * Create invoice
      *
      * @return Invoice
      */
@@ -95,11 +76,11 @@ class InvoiceBuilder
             $this->getSerial(),
             $this->getSeller(),
             $this->getBuyer(),
-            $this->getBillDate(),
-            $this->getOCR(),
-            $this->posts,
             $this->message,
-            $this->paymentTerm,
+            $this->getOcr(),
+            $this->posts,
+            $this->getBillDate(),
+            $this->expiresAfter,
             $this->deduction,
             $this->currency
         );
@@ -114,14 +95,14 @@ class InvoiceBuilder
     {
         unset($this->serial);
         unset($this->ocr);
-        $this->generateOCR = false;
+        $this->generateOcr = false;
         unset($this->seller);
         unset($this->buyer);
         unset($this->billDate);
-        $this->paymentTerm = 30;
+        $this->expiresAfter = 30;
         $this->deduction = null;
         $this->message = '';
-        $this->posts = array();
+        $this->posts = [];
         $this->currency = 'SEK';
 
         return $this;
@@ -231,24 +212,24 @@ class InvoiceBuilder
     }
 
     /**
-     * Set if OCR may be generated from Invoice serial
+     * Set if ocr may be generated from serial
      *
-     * @param  boolean        $flag
+     * @param  boolean        $generateOcr
      * @return InvoiceBuilder Instance for chaining
      */
-    public function generateOCR($flag = true)
+    public function setGenerateOcr($generateOcr = true)
     {
-        $this->generateOCR = $flag;
+        $this->generateOcr = $generateOcr;
         return $this;
     }
 
     /**
      * Set invoice reference number
      *
-     * @param  OCR            $ocr
+     * @param  Ocr            $ocr
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setOCR(OCR $ocr)
+    public function setOcr(Ocr $ocr)
     {
         $this->ocr = $ocr;
         return $this;
@@ -257,17 +238,17 @@ class InvoiceBuilder
     /**
      * Get invoice reference number
      *
-     * @return OCR
+     * @return Ocr
      * @throws RuntimeException If ocr is not set or can not be generated
      */
-    public function getOCR()
+    public function getOcr()
     {
         if (isset($this->ocr)) {
             return $this->ocr;
         }
 
-        if ($this->generateOCR) {
-            return OCR::create($this->getSerial());
+        if ($this->generateOcr) {
+            return (new OcrFactory)->createOcr($this->getSerial());
         }
 
         throw new RuntimeException("Unable to generate Invoice: OCR not set.");
@@ -291,9 +272,9 @@ class InvoiceBuilder
      * @param  int            $term Number of days
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setPaymentTerm($term)
+    public function setExpiresAfter($term)
     {
-        $this->paymentTerm = $term;
+        $this->expiresAfter = $term;
         return $this;
     }
 

@@ -1,51 +1,58 @@
 <?php
 
-namespace ledgr\billing;
-
-use ledgr\id\CorporateId;
-use ledgr\banking\Bankgiro;
+namespace byrokrat\billing;
 
 class LegalPersonTest extends \PHPUnit_Framework_TestCase
 {
-    private function make()
+    private $person;
+
+    protected function setup()
     {
-        return new LegalPerson(
-            'Name',
-            new CorporateId('777777-7777'),
-            new Bankgiro('111-1111'),
-            '1234',
-            true,
-            true
-        );
+        $this->person = new LegalPerson('Name', null, null, '1234', true, true);
     }
 
     public function testGetName()
     {
-        $this->assertEquals('Name', $this->make()->getName());
+        $this->assertEquals(
+            'Name',
+            $this->person->getName()
+        );
     }
 
     public function testGetId()
     {
-        $this->assertEquals(new CorporateId('777777-7777'), $this->make()->getId());
+        $this->assertInstanceOf(
+            'byrokrat\id\Id',
+            $this->person->getId()
+        );
     }
 
     public function testGetAccount()
     {
-        $this->assertEquals(new Bankgiro('111-1111'), $this->make()->getAccount());
+        $this->assertInstanceOf(
+            'byrokrat\banking\AccountNumber',
+            $this->person->getAccount()
+        );
     }
 
     public function testGetCustomerNumber()
     {
-        $this->assertEquals('1234', $this->make()->getCustomerNumber());
+        $this->assertEquals(
+            '1234',
+            $this->person->getCustomerNumber()
+        );
     }
 
-    public function testIsCorporation()
+    public function testIsOrganization()
     {
-        $this->assertTrue($this->make()->isCorporation());
+        $this->assertTrue($this->person->isOrganization());
     }
 
     public function testGetVatNr()
     {
-        $this->assertEquals('SE777777777701', $this->make()->getVatNr());
+        $this->assertEquals(
+            'SE01',
+            $this->person->getVatNr()
+        );
     }
 }
