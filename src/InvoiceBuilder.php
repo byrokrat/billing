@@ -41,9 +41,9 @@ class InvoiceBuilder
     private $generateOcr;
 
     /**
-     * @var InvoicePost[] List of posts
+     * @var Item[] List of charged items
      */
-    private $posts = [];
+    private $items = [];
 
     /**
      * @var DateTime Invoice creation date
@@ -85,7 +85,7 @@ class InvoiceBuilder
         $this->buyer = null;
         $this->message = '';
         $this->ocr = null;
-        $this->posts = [];
+        $this->items = [];
         $this->generateOcr = false;
         $this->billDate = null;
         $this->expiresAfter = 30;
@@ -107,7 +107,7 @@ class InvoiceBuilder
             $this->getBuyer(),
             $this->message,
             $this->getOcr(),
-            $this->posts,
+            $this->items,
             $this->billDate ?: new DateTime,
             $this->expiresAfter,
             $this->deduction,
@@ -246,14 +246,14 @@ class InvoiceBuilder
     }
 
     /**
-     * Add post to invoice
+     * Add item to invoice
      *
-     * @param  InvoicePost    $post
+     * @param  Item           $item
      * @return InvoiceBuilder Instance for chaining
      */
-    public function addPost(InvoicePost $post)
+    public function addItem(Item $item)
     {
-        $this->posts[] = $post;
+        $this->items[] = $item;
         return $this;
     }
 

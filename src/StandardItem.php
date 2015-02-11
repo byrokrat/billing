@@ -5,10 +5,12 @@ namespace byrokrat\billing;
 use byrokrat\amount\Amount;
 
 /**
- * Represents a charged item, it's unit cost and VAT rate
+ * Standard item implementation
  */
-class InvoicePost
+class StandardItem implements Item
 {
+    use ItemTrait;
+
     /**
      * @var string Post description
      */
@@ -30,7 +32,7 @@ class InvoicePost
     private $vat;
 
     /**
-     * Constructor
+     * Load item data
      *
      * @param string $description Post description
      * @param Amount $units       Number of units
@@ -70,38 +72,20 @@ class InvoicePost
      *
      * @return Amount
      */
-    public function getUnitCost()
+    public function getCostPerUnit()
     {
         return $this->unitCost;
     }
 
     /**
-     * Get total post cost
-     *
-     * @return Amount
-     */
-    public function getUnitTotal()
-    {
-        return $this->getUnitCost()->multiplyWith($this->getNrOfUnits());
-    }
-
-    /**
      * Get VAT rate
      *
+     * {@inheritdoc}
+     * 
      * @return Amount
      */
     public function getVatRate()
     {
         return $this->vat;
-    }
-
-    /**
-     * Get total VAT for post
-     *
-     * @return Amount
-     */
-    public function getVatTotal()
-    {
-        return $this->getUnitTotal()->multiplyWith($this->getVatRate());
     }
 }

@@ -17,13 +17,13 @@ composer require byrokrat/billing
 
 Usage
 -----
-[`InvoicePost`](/src/InvoicePost.php) represents a purchased item.
+[`Item`](/src/Item.php) represents a purchased item.
 
 ```php
-use byrokrat\billing\InvoicePost;
+use byrokrat\billing\StandardItem;
 
 // 1 unit of a 100 EUR item with 25% VAT
-$item = new InvoicePost(
+$item = new StandardItem(
     'Item description',
     new Amount('1'),
     new Amount('100'),
@@ -42,7 +42,7 @@ $invoice = (new InvoiceBuilder)
     ->setBuyer(new LegalPerson('Mrs Y', ...))
     ->setMessage('Pay in time or else!')
     ->generateOcr()
-    ->addPost($item)
+    ->addItem($item)
     ->setCurrency('EUR')
     ->buildInvoice();
 ```

@@ -37,9 +37,9 @@ class Invoice
     private $ocr;
 
     /**
-     * @var InvoicePost[] List if invoice posts
+     * @var Item[] List if charged items
      */
-    private $posts = [];
+    private $items = [];
 
     /**
      * @var DateTime Creation date
@@ -68,11 +68,11 @@ class Invoice
      * @param LegalPerson   $seller       Seller object
      * @param LegalPerson   $buyer        Buyer object
      * @param string        $message      Invoice message
-     * @param Ocr           $ocr          Payment reference number
-     * @param InvoicePost[] $posts        Array of InvoicePost objects
-     * @param DateTime      $billDate     Date of invoice creation
+     * @param Ocr|null      $ocr          Payment reference number
+     * @param Item[]        $items        Array of charged items
+     * @param DateTime|null $billDate     Date of invoice creation
      * @param integer       $expiresAfter Nr of days before invoice expires
-     * @param Amount        $deduction    Prepaid amound to deduct
+     * @param Amount|null   $deduction    Prepaid amound to deduct
      * @param string        $currency     3-letter ISO 4217 currency code indicating currency
      */
     public function __construct(
@@ -81,7 +81,7 @@ class Invoice
         LegalPerson $buyer,
         $message = '',
         Ocr $ocr = null,
-        array $posts = array(),
+        array $items = array(),
         DateTime $billDate = null,
         $expiresAfter = 30,
         Amount $deduction = null,
@@ -91,8 +91,8 @@ class Invoice
         $this->seller = $seller;
         $this->buyer = $buyer;
 
-        foreach ($posts as $post) {
-            $this->addPost($post);
+        foreach ($items as $item) {
+            $this->addItem($item);
         }
 
         $this->ocr = $ocr;
@@ -156,24 +156,24 @@ class Invoice
     }
 
     /**
-     * Add post to invoice
+     * Add item to invoice
      *
-     * @param  InvoicePost $post
+     * @param  Item $item
      * @return null
      */
-    public function addPost(InvoicePost $post)
+    public function addItem(Item $item)
     {
-        $this->posts[] = $post;
+        $this->items[] = $item;
     }
 
     /**
-     * Get list of invoice posts
+     * Get list of charged items
      *
-     * @return InvoicePost[]
+     * @return Item[]
      */
-    public function getPosts()
+    public function getItems()
     {
-        return $this->posts;
+        return $this->items;
     }
 
     /**
@@ -181,12 +181,12 @@ class Invoice
      *
      * @return Amount
      */
-    public function getVatTotal()
+    public function getTotalVatCost()
     {
         return array_reduce(
-            $this->getPosts(),
-            function (Amount $carry, InvoicePost $post) {
-                return $carry->add($post->getVatTotal());
+            $this->getItems(),
+            function (Amount $carry, Item $item) {
+                return $carry->add($item->getTotalVatCost());
             },
             new Amount('0')
         );
@@ -197,12 +197,12 @@ class Invoice
      *
      * @return Amount
      */
-    public function getUnitTotal()
+    public function getTotalUnitCost()
     {
         return array_reduce(
-            $this->getPosts(),
-            function (Amount $carry, InvoicePost $post) {
-                return $carry->add($post->getUnitTotal());
+            $this->getItems(),
+            function (Amount $carry, Item $item) {
+                return $carry->add($item->getTotalUnitCost());
             },
             new Amount('0')
         );
@@ -215,37 +215,38 @@ class Invoice
      */
     public function getInvoiceTotal()
     {
-        return $this->getVatTotal()
-            ->add($this->getUnitTotal())
+        return $this->getTotalVatCost()
+            ->add($this->getTotalUnitCost())
             ->subtract($this->getDeduction());
     }
 
     /**
      * Get unit cost totals for non-zero vat rates used in invoice
      *
-     * @return InvoicePost[]
+     * @return Item[]
      */
     public function getVatTotals()
     {
+        // TODO bättre namn tack!!
         $vatTotals = [];
 
-        foreach ($this->getPosts() as $post) {
-            if ($post->getVatRate()->isPositive()) {
-                $key = (string)$post->getVatRate();
+        foreach ($this->getItems() as $item) {
+            if ($item->getVatRate()->isPositive()) {
+                $key = (string)$item->getVatRate();
 
                 if (!array_key_exists($key, $vatTotals)) {
-                    $vatTotals[$key] = new InvoicePost(
+                    $vatTotals[$key] = new StandardItem(
                         '',
                         new Amount('1'),
                         new Amount('0'),
-                        $post->getVatRate()
+                        $item->getVatRate()
                     );
                 }
 
-                $vatTotals[$key] = new InvoicePost(
+                $vatTotals[$key] = new StandardItem(
                     $vatTotals[$key]->getDescription(),
                     $vatTotals[$key]->getNrOfUnits(),
-                    $vatTotals[$key]->getUnitCost()->add($post->getUnitTotal()),
+                    $vatTotals[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
                     $vatTotals[$key]->getVatRate()
                 );
             }

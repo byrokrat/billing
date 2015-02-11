@@ -15,7 +15,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
             new LegalPerson('buyer'),
             'message',
             new Ocr('133'),
-            $this->getPosts(),
+            $this->getItems(),
             new DateTime('2014-01-01'),
             1,
             new Amount('100'),
@@ -23,16 +23,16 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function getPosts()
+    private function getItems()
     {
         return [
-            new InvoicePost(
+            new StandardItem(
                 '',
                 new Amount('1'),
                 new Amount('100', 2),
                 new Amount('.25', 2)
             ),
-            new InvoicePost(
+            new StandardItem(
                 '',
                 new Amount('2'),
                 new Amount('50', 2),
@@ -41,19 +41,19 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testGetPosts()
+    public function testGetItems()
     {
-        $this->assertEquals($this->getPosts(), $this->getInvoice()->getPosts());
+        $this->assertEquals($this->getItems(), $this->getInvoice()->getItems());
     }
 
-    public function testGetVatTotal()
+    public function testGetTotalVatCost()
     {
-        $this->assertEquals('25', (string)$this->getInvoice()->getVatTotal());
+        $this->assertEquals('25', (string)$this->getInvoice()->getTotalVatCost());
     }
 
-    public function testGetUnitTotal()
+    public function testGetTotalUnitCost()
     {
-        $this->assertEquals('200', (string)$this->getInvoice()->getUnitTotal());
+        $this->assertEquals('200', (string)$this->getInvoice()->getTotalUnitCost());
     }
 
     public function testGetInvoiceTotal()
@@ -63,8 +63,8 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetVatTotals()
     {
-        // Second post has VAT 0 and should not be included
-        $rates = $this->getPosts();
+        // Second item has VAT 0 and should not be included
+        $rates = $this->getItems();
         array_pop($rates);
 
         $this->assertEquals($rates, $this->getInvoice()->getVatTotals());
