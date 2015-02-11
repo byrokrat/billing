@@ -17,6 +17,8 @@ composer require byrokrat/billing
 
 Usage
 -----
+Create items to bill:
+
 ```php
 use byrokrat\billing\StandardItem;
 use byrokrat\amount\Amount;
@@ -30,7 +32,7 @@ $item = new StandardItem(
 );
 ```
 
-The simplest way to create invoices is by using the [`InvoiceBuilder`](/src/InvoiceBuilder.php).
+The simplest way to create invoices is by using the [`InvoiceBuilder`](/src/InvoiceBuilder.php):
 
 ```php
 use byrokrat\billing\InvoiceBuilder;
@@ -47,10 +49,10 @@ $invoice = (new InvoiceBuilder)
     ->buildInvoice();
 ```
 
-[`Invoice`](/src/Invoice.php) represents the actual invoice.
+[`Invoice`](/src/Invoice.php) represents the actual invoice:
 
 ```php
-echo $invoice->getInvoiceTotal();
+echo $invoice->getTotalCost();
 // prints 125 (100 EUR plus 25% VAT)
 ```
 
@@ -76,7 +78,7 @@ getSerial()         | string   | Get invoice serial number
 getSeller()         | Seller   | Get registered seller
 getBuyer()          | Buyer    | Get registered buyer
 getMessage()        | string   | Get invoice message
-getOcr()            | Ocr|null | Get invoice reference number
+getOcr()            | Ocr      | Get invoice reference number
 addItem(Item $item) | null     | Add item to invoice
 getItems()          | Item[]   | Get list of charged items
 getTotalUnitCost()  | Amount   | Get total cost of all items (VAT excluded)
