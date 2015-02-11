@@ -16,16 +16,6 @@ class InvoiceBuilder
     private $serial;
 
     /**
-     * @var Ocr Payment reference number
-     */
-    private $ocr;
-
-    /**
-     * @var boolean Flag if ocr may be generated from serial
-     */
-    private $generateOcr = false;
-
-    /**
      * @var LegalPerson Seller
      */
     private $seller;
@@ -36,6 +26,26 @@ class InvoiceBuilder
     private $buyer;
 
     /**
+     * @var string Message to buyer
+     */
+    private $message;
+
+    /**
+     * @var Ocr Payment reference number
+     */
+    private $ocr;
+
+    /**
+     * @var boolean Flag if ocr may be generated from serial
+     */
+    private $generateOcr;
+
+    /**
+     * @var InvoicePost[] List of posts
+     */
+    private $posts = [];
+
+    /**
      * @var DateTime Invoice creation date
      */
     private $billDate;
@@ -43,47 +53,24 @@ class InvoiceBuilder
     /**
      * @var integer Number of days before invoice expires
      */
-    private $expiresAfter = 30;
+    private $expiresAfter;
 
     /**
-     * @var Amount Deduction of total cost
+     * @var Amount Prepaid amound to deduct
      */
-    private $deduction = null;
+    private $deduction;
 
     /**
-     * @var string Message to buyer
+     * @var string 3-letter ISO 4217 code indicating currency
      */
-    private $message = '';
+    private $currency;
 
     /**
-     * @var array Collection of InvoicePost objects
+     * Reset values at construct
      */
-    private $posts = [];
-
-    /**
-     * @var string 3-letter ISO 4217 currency code indicating the currency to use
-     */
-    private $currency = 'SEK';
-
-    /**
-     * Create invoice
-     *
-     * @return Invoice
-     */
-    public function getInvoice()
+    public function __construct()
     {
-        return new Invoice(
-            $this->getSerial(),
-            $this->getSeller(),
-            $this->getBuyer(),
-            $this->message,
-            $this->getOcr(),
-            $this->posts,
-            $this->getBillDate(),
-            $this->expiresAfter,
-            $this->deduction,
-            $this->currency
-        );
+        $this->reset();
     }
 
     /**
@@ -93,23 +80,43 @@ class InvoiceBuilder
      */
     public function reset()
     {
-        unset($this->serial);
-        unset($this->ocr);
+        $this->serial = null;
+        $this->seller = null;
+        $this->buyer = null;
+        $this->message = '';
+        $this->ocr = null;
+        $this->posts = [];
         $this->generateOcr = false;
-        unset($this->seller);
-        unset($this->buyer);
-        unset($this->billDate);
+        $this->billDate = null;
         $this->expiresAfter = 30;
         $this->deduction = null;
-        $this->message = '';
-        $this->posts = [];
         $this->currency = 'SEK';
-
         return $this;
     }
 
     /**
-     * Set serial
+     * Build invoice
+     *
+     * @return Invoice
+     */
+    public function buildInvoice()
+    {
+        return new Invoice(
+            $this->getSerial(),
+            $this->getSeller(),
+            $this->getBuyer(),
+            $this->message,
+            $this->getOcr(),
+            $this->posts,
+            $this->billDate ?: new DateTime,
+            $this->expiresAfter,
+            $this->deduction,
+            $this->currency
+        );
+    }
+
+    /**
+     * Set invoice serial number
      *
      * @param  string         $serial
      * @return InvoiceBuilder Instance for chaining
@@ -131,8 +138,7 @@ class InvoiceBuilder
         if (isset($this->serial)) {
             return $this->serial;
         }
-
-        throw new RuntimeException("Unable to create Invoice: serial not set.");
+        throw new RuntimeException("Unable to create invoice: serial not set");
     }
 
     /**
@@ -158,8 +164,7 @@ class InvoiceBuilder
         if (isset($this->seller)) {
             return $this->seller;
         }
-
-        throw new RuntimeException("Unable to create Invoice: seller not set.");
+        throw new RuntimeException("Unable to create Invoice: seller not set");
     }
 
     /**
@@ -185,41 +190,18 @@ class InvoiceBuilder
         if (isset($this->buyer)) {
             return $this->buyer;
         }
-
-        throw new RuntimeException("Unable to create Invoice: buyer not set.");
+        throw new RuntimeException("Unable to create Invoice: buyer not set");
     }
 
     /**
-     * Set date of invoice creation
+     * Set invoice message
      *
-     * @param  DateTime       $date
+     * @param  string         $message
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setBillDate(DateTime $date)
+    public function setMessage($message)
     {
-        $this->billDate = $date;
-        return $this;
-    }
-
-    /**
-     * Get date of invoice creation
-     *
-     * @return DateTime
-     */
-    public function getBillDate()
-    {
-        return isset($this->billDate) ? $this->billDate : new DateTime;
-    }
-
-    /**
-     * Set if ocr may be generated from serial
-     *
-     * @param  boolean        $generateOcr
-     * @return InvoiceBuilder Instance for chaining
-     */
-    public function setGenerateOcr($generateOcr = true)
-    {
-        $this->generateOcr = $generateOcr;
+        $this->message = $message;
         return $this;
     }
 
@@ -232,6 +214,18 @@ class InvoiceBuilder
     public function setOcr(Ocr $ocr)
     {
         $this->ocr = $ocr;
+        return $this;
+    }
+
+    /**
+     * Set if ocr may be generated from serial
+     *
+     * @param  boolean        $generateOcr
+     * @return InvoiceBuilder Instance for chaining
+     */
+    public function generateOcr($generateOcr = true)
+    {
+        $this->generateOcr = $generateOcr;
         return $this;
     }
 
@@ -252,14 +246,26 @@ class InvoiceBuilder
     }
 
     /**
-     * Set invoice message
+     * Add post to invoice
      *
-     * @param  string         $message
+     * @param  InvoicePost    $post
      * @return InvoiceBuilder Instance for chaining
      */
-    public function setMessage($message)
+    public function addPost(InvoicePost $post)
     {
-        $this->message = $message;
+        $this->posts[] = $post;
+        return $this;
+    }
+
+    /**
+     * Set date of invoice creation
+     *
+     * @param  DateTime       $date
+     * @return InvoiceBuilder Instance for chaining
+     */
+    public function setBillDate(DateTime $date)
+    {
+        $this->billDate = $date;
         return $this;
     }
 
@@ -295,18 +301,6 @@ class InvoiceBuilder
     public function setCurrency($currency)
     {
         $this->currency = $currency;
-        return $this;
-    }
-
-    /**
-     * Add post to invoice
-     *
-     * @param  InvoicePost    $post
-     * @return InvoiceBuilder Instance for chaining
-     */
-    public function addPost(InvoicePost $post)
-    {
-        $this->posts[] = $post;
         return $this;
     }
 }

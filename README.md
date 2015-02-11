@@ -37,15 +37,14 @@ The simplest way to create invoices is by using the [`InvoiceBuilder`](/src/Invo
 use byrokrat\billing\InvoiceBuilder;
 
 $invoice = (new InvoiceBuilder)
-    ->reset()
     ->setSerial('1')
-    ->setGenerateOcr()
     ->setSeller(new LegalPerson('Company X', ...))
     ->setBuyer(new LegalPerson('Mrs Y', ...))
     ->setMessage('Pay in time or else!')
-    ->setCurrency('EUR')
+    ->generateOcr()
     ->addPost($item)
-    ->getInvoice();
+    ->setCurrency('EUR')
+    ->buildInvoice();
 ```
 
 [`Invoice`](/src/Invoice.php) represents the actual invoice. Se the class

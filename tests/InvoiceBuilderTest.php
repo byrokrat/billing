@@ -7,6 +7,16 @@ use DateTime;
 
 class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
 {
+    private $builder;
+
+    protected function setup()
+    {
+        $this->builder = (new InvoiceBuilder)
+            ->setSerial('1')
+            ->setSeller(new LegalPerson('seller'))
+            ->setBuyer(new LegalPerson('buyer'));
+    }
+
     public function testExceptionWhenSerialNotSet()
     {
         $this->setExpectedException('byrokrat\billing\RuntimeException');
@@ -25,58 +35,51 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
         (new InvoiceBuilder)->getBuyer();
     }
 
-    public function testBillDate()
+    public function testBuildInvoice()
     {
-        $builder = new InvoiceBuilder();
-        $date = new DateTime();
-
-        $builder->setBillDate($date);
-        $this->assertSame($date, $builder->getBillDate());
-
-        $builder->reset();
-
-        $this->assertNotSame($date, $builder->getBillDate());
-    }
-
-    public function testGenerateOcr()
-    {
-        $builder = new InvoiceBuilder();
         $ocr = new Ocr('232');
+        $post = new InvoicePost('', new Amount('0'), new Amount('0'));
+        $date = new DateTime();
+        $deduction = new Amount('100');
 
-        $builder->setOcr($ocr);
-        $this->assertSame($ocr, $builder->getOcr());
+        $invoice = $this->builder
+            ->setMessage('message')
+            ->setOcr($ocr)
+            ->addPost($post)
+            ->setBillDate($date)
+            ->setExpiresAfter(1)
+            ->setDeduction($deduction)
+            ->setCurrency('EUR')
+            ->buildInvoice();
 
-        $builder->reset()->setGenerateOcr()->setSerial('1');
-
-        $this->assertEquals(new Ocr('133'), $builder->getOcr());
+        $this->assertSame('message', $invoice->getMessage());
+        $this->assertSame($ocr, $invoice->getOcr());
+        $this->assertSame([$post], $invoice->getPosts());
+        $this->assertSame($date, $invoice->getBillDate());
+        $this->assertSame($deduction, $invoice->getDeduction());
+        $this->assertSame('EUR', $invoice->getCurrency());
     }
 
-    public function testGetInvoice()
+    public function testGnerateWithoutBillDate()
     {
-        $invoice = (new InvoiceBuilder)
-            ->setSerial('1')
-            ->setGenerateOcr()
-            ->setSeller(new LegalPerson('seller'))
-            ->setBuyer(new LegalPerson('buyer'))
-            ->setExpiresAfter(1)
-            ->setDeduction(new Amount('100'))
-            ->setMessage('message')
-            ->setCurrency('EUR')
-            ->addPost(new InvoicePost('', new Amount('0'), new Amount('0')))
-            ->getInvoice();
-
-        $this->assertEquals('message', $invoice->getMessage());
-        $this->assertEquals('EUR', $invoice->getCurrency());
+        $this->assertInstanceOf(
+            'DateTime',
+            $this->builder->buildInvoice()->getBillDate()
+        );
     }
 
     public function testGeneratingWithoutOcr()
     {
-        $invoice = (new InvoiceBuilder)
-            ->setSerial('1')
-            ->setSeller(new LegalPerson('seller'))
-            ->setBuyer(new LegalPerson('buyer'))
-            ->getInvoice();
+        $this->assertNull(
+            $this->builder->buildInvoice()->getOcr()
+        );
+    }
 
-        $this->assertNull($invoice->getOcr());
+    public function testGenerateOcr()
+    {
+        $this->assertInstanceOf(
+            'byrokrat\billing\Ocr',
+            $this->builder->generateOcr()->buildInvoice()->getOcr()
+        );
     }
 }
