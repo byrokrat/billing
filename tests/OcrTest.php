@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 class OcrTest extends \PHPUnit_Framework_TestCase
@@ -15,7 +17,6 @@ class OcrTest extends \PHPUnit_Framework_TestCase
     public function invalidStructureProvider()
     {
         return [
-            [123],
             ['a'],
             ['1'],
             ['12345678901234567890123456']

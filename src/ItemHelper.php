@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
@@ -11,51 +13,39 @@ trait ItemHelper
 {
     /**
      * Get number of units
-     *
-     * @return Amount
      */
-    abstract public function getNrOfUnits();
+    abstract public function getNrOfUnits(): Amount;
 
     /**
      * Get cost per unit
-     *
-     * @return Amount
      */
-    abstract public function getCostPerUnit();
+    abstract public function getCostPerUnit(): Amount;
 
     /**
      * Get VAT rate
-     *
-     * @return Amount
      */
-    abstract public function getVatRate();
+    abstract public function getVatRate(): Amount;
 
     /**
      * Get total cost of all units (VAT excluded)
-     *
-     * @return Amount
      */
-    public function getTotalUnitCost()
+    public function getTotalUnitCost(): Amount
     {
         return $this->getCostPerUnit()->multiplyWith($this->getNrOfUnits());
     }
 
     /**
      * Get total VAT cost for all units
-     *
-     * @return Amount
      */
-    public function getTotalVatCost()
+    public function getTotalVatCost(): Amount
     {
         return $this->getTotalUnitCost()->multiplyWith($this->getVatRate());
     }
 
     /**
      * Get total item cost (VAT included)
-     *
-     * @return Amount
      */
-    public function getTotalCost()
+    public function getTotalCost(): Amount
     {
         return $this->getTotalUnitCost()->add($this->getTotalVatCost());
     }

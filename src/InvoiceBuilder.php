@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
-use DateTime;
 use byrokrat\amount\Amount;
 
 /**
@@ -46,12 +47,12 @@ class InvoiceBuilder
     private $items = [];
 
     /**
-     * @var DateTime Invoice creation date
+     * @var \DateTime Invoice creation date
      */
     private $billDate;
 
     /**
-     * @var integer Number of days before invoice expires
+     * @var int Number of days before invoice expires
      */
     private $expiresAfter;
 
@@ -75,10 +76,8 @@ class InvoiceBuilder
 
     /**
      * Reset builder values
-     *
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function reset()
+    public function reset(): self
     {
         $this->serial = null;
         $this->seller = null;
@@ -96,10 +95,8 @@ class InvoiceBuilder
 
     /**
      * Build invoice
-     *
-     * @return Invoice
      */
-    public function buildInvoice()
+    public function buildInvoice(): Invoice
     {
         return new Invoice(
             $this->getSerial(),
@@ -108,7 +105,7 @@ class InvoiceBuilder
             $this->message,
             $this->getOcr(),
             $this->items,
-            $this->billDate ?: new DateTime,
+            $this->billDate ?: new \DateTime,
             $this->expiresAfter,
             $this->deduction,
             $this->currency
@@ -117,11 +114,8 @@ class InvoiceBuilder
 
     /**
      * Set invoice serial number
-     *
-     * @param  string         $serial
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setSerial($serial)
+    public function setSerial(string $serial): self
     {
         $this->serial = $serial;
         return $this;
@@ -130,10 +124,9 @@ class InvoiceBuilder
     /**
      * Get invoice serial number
      *
-     * @return string
      * @throws RuntimeException If serial is not set
      */
-    public function getSerial()
+    public function getSerial(): string
     {
         if (isset($this->serial)) {
             return $this->serial;
@@ -143,11 +136,8 @@ class InvoiceBuilder
 
     /**
      * Set seller
-     *
-     * @param  Seller         $seller
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setSeller(Seller $seller)
+    public function setSeller(Seller $seller): self
     {
         $this->seller = $seller;
         return $this;
@@ -156,10 +146,9 @@ class InvoiceBuilder
     /**
      * Get seller
      *
-     * @return Seller
      * @throws RuntimeException If seller is not set
      */
-    public function getSeller()
+    public function getSeller(): Seller
     {
         if (isset($this->seller)) {
             return $this->seller;
@@ -169,11 +158,8 @@ class InvoiceBuilder
 
     /**
      * Set buyer
-     *
-     * @param  Buyer          $buyer
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setBuyer(Buyer $buyer)
+    public function setBuyer(Buyer $buyer): self
     {
         $this->buyer = $buyer;
         return $this;
@@ -182,10 +168,9 @@ class InvoiceBuilder
     /**
      * Get buyer
      *
-     * @return Buyer
      * @throws RuntimeException If buyer is not set
      */
-    public function getBuyer()
+    public function getBuyer(): Buyer
     {
         if (isset($this->buyer)) {
             return $this->buyer;
@@ -195,11 +180,8 @@ class InvoiceBuilder
 
     /**
      * Set invoice message
-     *
-     * @param  string         $message
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setMessage($message)
+    public function setMessage(string $message): self
     {
         $this->message = $message;
         return $this;
@@ -207,11 +189,8 @@ class InvoiceBuilder
 
     /**
      * Set invoice reference number
-     *
-     * @param  Ocr            $ocr
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setOcr(Ocr $ocr)
+    public function setOcr(Ocr $ocr): self
     {
         $this->ocr = $ocr;
         return $this;
@@ -219,11 +198,8 @@ class InvoiceBuilder
 
     /**
      * Set if ocr may be generated from serial
-     *
-     * @param  boolean        $generateOcr
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function generateOcr($generateOcr = true)
+    public function generateOcr(bool $generateOcr = true): self
     {
         $this->generateOcr = $generateOcr;
         return $this;
@@ -247,11 +223,8 @@ class InvoiceBuilder
 
     /**
      * Add item to invoice
-     *
-     * @param  Item           $item
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function addItem(Item $item)
+    public function addItem(Item $item): self
     {
         $this->items[] = $item;
         return $this;
@@ -259,11 +232,8 @@ class InvoiceBuilder
 
     /**
      * Set date of invoice creation
-     *
-     * @param  DateTime       $date
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setBillDate(DateTime $date)
+    public function setBillDate(\DateTime $date): self
     {
         $this->billDate = $date;
         return $this;
@@ -271,23 +241,17 @@ class InvoiceBuilder
 
     /**
      * Set number of days before invoice expires
-     *
-     * @param  int            $term Number of days
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setExpiresAfter($term)
+    public function setExpiresAfter(int $nrOfDays): self
     {
-        $this->expiresAfter = $term;
+        $this->expiresAfter = $nrOfDays;
         return $this;
     }
 
     /**
      * Set deduction (amount prepaid)
-     *
-     * @param  Amount         $deduction
-     * @return InvoiceBuilder Instance for chaining
      */
-    public function setDeduction(Amount $deduction)
+    public function setDeduction(Amount $deduction): self
     {
         $this->deduction = $deduction;
         return $this;
@@ -295,10 +259,8 @@ class InvoiceBuilder
 
     /**
      * Set the 3-letter ISO 4217 currency code indicating the invoice currency
-     *
-     * @param  string $currency Currency code
      */
-    public function setCurrency($currency)
+    public function setCurrency(string $currency): self
     {
         $this->currency = $currency;
         return $this;

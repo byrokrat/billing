@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
@@ -39,7 +41,7 @@ class StandardItem implements Item
      * @param Amount $unitCost    Cost per unit
      * @param Amount $vat         VAT rate, note that for 25% the value should be .25
      */
-    public function __construct($description, Amount $units, Amount $unitCost, Amount $vat = null)
+    public function __construct(string $description, Amount $units, Amount $unitCost, Amount $vat = null)
     {
         $this->description = $description;
         $this->units = $units;
@@ -49,30 +51,24 @@ class StandardItem implements Item
 
     /**
      * Get post description
-     *
-     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
      * Get number of units
-     *
-     * @return Amount
      */
-    public function getNrOfUnits()
+    public function getNrOfUnits(): Amount
     {
         return $this->units;
     }
 
     /**
      * Get cost per unit
-     *
-     * @return Amount
      */
-    public function getCostPerUnit()
+    public function getCostPerUnit(): Amount
     {
         return $this->unitCost;
     }
@@ -81,10 +77,8 @@ class StandardItem implements Item
      * Get VAT rate
      *
      * {@inheritdoc}
-     *
-     * @return Amount
      */
-    public function getVatRate()
+    public function getVatRate(): Amount
     {
         return $this->vat;
     }

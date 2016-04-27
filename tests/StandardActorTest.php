@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 class StandardActorTest extends \PHPUnit_Framework_TestCase

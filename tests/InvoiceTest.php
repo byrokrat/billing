@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
-use DateTime;
 
 class InvoiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +17,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
             'message',
             new Ocr('133'),
             $this->getItems(),
-            new DateTime('2014-01-01'),
+            new \DateTime('2014-01-01'),
             1,
             new Amount('100'),
             'SEK'
@@ -92,7 +93,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBillDate()
     {
-        $this->assertEquals(new DateTime('2014-01-01'), $this->getInvoice()->getBillDate());
+        $this->assertEquals(new \DateTime('2014-01-01'), $this->getInvoice()->getBillDate());
     }
 
     public function testGetOcr()
@@ -112,7 +113,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetExpirationDate()
     {
-        $this->assertEquals(new DateTime('2014-01-02'), $this->getInvoice()->getExpirationDate());
+        $this->assertEquals(new \DateTime('2014-01-02'), $this->getInvoice()->getExpirationDate());
     }
 
     public function testGetDeduction()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\checkdigit\Luhn;
@@ -16,10 +18,8 @@ trait OcrHelper
 
     /**
      * Get checksum calculator
-     *
-     * @return Luhn
      */
-    protected function getLuhnCalculator()
+    protected function getLuhnCalculator(): Luhn
     {
         return $this->checksum = $this->checksum ?: new Luhn;
     }
@@ -33,8 +33,8 @@ trait OcrHelper
      * @param  string $number
      * @return string
      */
-    protected function calculateLengthDigit($number)
+    protected function calculateLengthDigit(string $number): string
     {
-        return (string)(strlen($number) + 2) % 10;
+        return (string)((strlen($number) + 2) % 10);
     }
 }

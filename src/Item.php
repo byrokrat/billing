@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
@@ -11,52 +13,38 @@ interface Item
 {
     /**
      * Get item description
-     *
-     * @return string
      */
-    public function getDescription();
+    public function getDescription(): string;
 
     /**
      * Get number of units
-     *
-     * @return Amount
      */
-    public function getNrOfUnits();
+    public function getNrOfUnits(): Amount;
 
     /**
      * Get cost per unit
-     *
-     * @return Amount
      */
-    public function getCostPerUnit();
+    public function getCostPerUnit(): Amount;
 
     /**
      * Get total cost of all units (VAT excluded)
-     *
-     * @return Amount
      */
-    public function getTotalUnitCost();
+    public function getTotalUnitCost(): Amount;
 
     /**
      * Get VAT rate
      *
      * Note that 25% is represented as .25
-     *
-     * @return Amount
      */
-    public function getVatRate();
+    public function getVatRate(): Amount;
 
     /**
      * Get total VAT cost for all units
-     *
-     * @return Amount
      */
-    public function getTotalVatCost();
+    public function getTotalVatCost(): Amount;
 
     /**
      * Get total item cost (VAT included)
-     *
-     * @return Amount
      */
-    public function getTotalCost();
+    public function getTotalCost(): Amount;
 }

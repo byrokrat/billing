@@ -17,12 +17,8 @@
         }
     },
     "require": {
-        "php": ">=5.4",
-        "byrokrat/amount": "~1.0",
-        "byrokrat/checkdigit": "~1.0"
-    },
-    "suggest" : {
-        "byrokrat/paperinvoice": "Create paper (pdf) representations of invoices",
-        "byrokrat/autogiro": "Send invoices using the swedish autogiro banking system"
+        "php": ">=7",
+        "byrokrat/amount": "^1.0",
+        "byrokrat/checkdigit": "^1.0"
     }
 }

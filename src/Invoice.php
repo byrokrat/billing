@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
-use DateTime;
-use DateInterval;
 use byrokrat\amount\Amount;
 
 /**
@@ -42,7 +42,7 @@ class Invoice
     private $items = [];
 
     /**
-     * @var DateTime Creation date
+     * @var \DateTime Creation date
      */
     private $billDate;
 
@@ -64,28 +64,28 @@ class Invoice
     /**
      * Construct invoice
      *
-     * @param string        $serial       Invoice serial number
-     * @param Seller        $seller       Registered seller
-     * @param Buyer         $buyer        Registered buyer
-     * @param string        $message      Invoice message
-     * @param Ocr|null      $ocr          Payment reference number
-     * @param Item[]        $items        Array of charged items
-     * @param DateTime|null $billDate     Date of invoice creation
-     * @param integer       $expiresAfter Nr of days before invoice expires
-     * @param Amount|null   $deduction    Prepaid amound to deduct
-     * @param string        $currency     3-letter ISO 4217 currency code indicating currency
+     * @param string         $serial       Invoice serial number
+     * @param Seller         $seller       Registered seller
+     * @param Buyer          $buyer        Registered buyer
+     * @param string         $message      Invoice message
+     * @param Ocr|null       $ocr          Payment reference number
+     * @param Item[]         $items        Array of charged items
+     * @param \DateTime|null $billDate     Date of invoice creation
+     * @param integer        $expiresAfter Nr of days before invoice expires
+     * @param Amount|null    $deduction    Prepaid amound to deduct
+     * @param string         $currency     3-letter ISO 4217 currency code indicating currency
      */
     public function __construct(
-        $serial,
+        string $serial,
         Seller $seller,
         Buyer $buyer,
-        $message = '',
+        string $message = '',
         Ocr $ocr = null,
         array $items = array(),
-        DateTime $billDate = null,
-        $expiresAfter = 30,
+        \DateTime $billDate = null,
+        int $expiresAfter = 30,
         Amount $deduction = null,
-        $currency = 'SEK'
+        string $currency = 'SEK'
     ) {
         $this->serial = $serial;
         $this->seller = $seller;
@@ -97,7 +97,7 @@ class Invoice
 
         $this->ocr = $ocr;
         $this->message = $message;
-        $this->billDate = $billDate ?: new DateTime;
+        $this->billDate = $billDate ?: new \DateTime;
         $this->expiresAfter = $expiresAfter;
         $this->deduction = $deduction ?: new Amount('0');
         $this->currency = $currency;
@@ -105,40 +105,32 @@ class Invoice
 
     /**
      * Get invoice serial number
-     *
-     * @return string
      */
-    public function getSerial()
+    public function getSerial(): string
     {
         return $this->serial;
     }
 
     /**
      * Get seller
-     *
-     * @return Seller
      */
-    public function getSeller()
+    public function getSeller(): Seller
     {
         return $this->seller;
     }
 
     /**
      * Get buyer
-     *
-     * @return Buyer
      */
-    public function getBuyer()
+    public function getBuyer(): Buyer
     {
         return $this->buyer;
     }
 
     /**
      * Get invoice message
-     *
-     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -159,7 +151,7 @@ class Invoice
      * Add item to invoice
      *
      * @param  Item $item
-     * @return null
+     * @return void
      */
     public function addItem(Item $item)
     {
@@ -171,17 +163,15 @@ class Invoice
      *
      * @return Item[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
 
     /**
      * Get total cost of all items (VAT excluded)
-     *
-     * @return Amount
      */
-    public function getTotalUnitCost()
+    public function getTotalUnitCost(): Amount
     {
         return array_reduce(
             $this->getItems(),
@@ -194,10 +184,8 @@ class Invoice
 
     /**
      * Get total VAT cost for all items
-     *
-     * @return Amount
      */
-    public function getTotalVatCost()
+    public function getTotalVatCost(): Amount
     {
         return array_reduce(
             $this->getItems(),
@@ -210,10 +198,8 @@ class Invoice
 
     /**
      * Get charged amount (VAT included)
-     *
-     * @return Amount
      */
-    public function getTotalCost()
+    public function getTotalCost(): Amount
     {
         return $this->getTotalVatCost()
             ->add($this->getTotalUnitCost())
@@ -225,7 +211,7 @@ class Invoice
      *
      * @return Item[]
      */
-    public function getVatRates()
+    public function getVatRates(): array
     {
         $rates = [];
 
@@ -257,53 +243,43 @@ class Invoice
 
     /**
      * Get date of invoice creation
-     *
-     * @return DateTime
      */
-    public function getBillDate()
+    public function getBillDate(): \DateTime
     {
         return $this->billDate;
     }
 
     /**
      * Get number of days before invoice expires
-     *
-     * @return integer
      */
-    public function getExpiresAfter()
+    public function getExpiresAfter(): int
     {
         return $this->expiresAfter;
     }
 
     /**
      * Get date when invoice expires
-     *
-     * @return DateTime
      */
-    public function getExpirationDate()
+    public function getExpirationDate(): \DateTime
     {
         $expireDate = clone $this->billDate;
-        $expireDate->add(new DateInterval("P{$this->getExpiresAfter()}D"));
+        $expireDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
 
         return $expireDate;
     }
 
     /**
      * Get prepaid amound to deduct
-     *
-     * @return Amount
      */
-    public function getDeduction()
+    public function getDeduction(): Amount
     {
         return $this->deduction;
     }
 
     /**
      * Get the 3-letter ISO 4217 currency code indicating the invoice currency
-     *
-     * @return string Currency code
      */
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }

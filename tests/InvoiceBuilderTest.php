@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
-use DateTime;
 
 class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +40,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $ocr = new Ocr('232');
         $item = new StandardItem('', new Amount('0'), new Amount('0'));
-        $date = new DateTime();
+        $date = new \DateTime();
         $deduction = new Amount('100');
 
         $invoice = $this->builder

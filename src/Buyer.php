@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace byrokrat\billing;
 
 /**
@@ -9,8 +11,6 @@ interface Buyer
 {
     /**
      * Get name of buyer
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 }
