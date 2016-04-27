@@ -42,7 +42,7 @@ class InvoiceBuilder
     private $generateOcr;
 
     /**
-     * @var Item[] List of charged items
+     * @var ItemEnvelope[] List of charged items
      */
     private $items = [];
 
@@ -226,7 +226,7 @@ class InvoiceBuilder
      */
     public function addItem(Item $item): self
     {
-        $this->items[] = $item;
+        $this->items[] = new ItemEnvelope($item);
         return $this;
     }
 

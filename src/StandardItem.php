@@ -11,15 +11,13 @@ use byrokrat\amount\Amount;
  */
 class StandardItem implements Item
 {
-    use ItemHelper;
-
     /**
      * @var string Post description
      */
     private $description;
 
     /**
-     * @var Amount Number of units
+     * @var int Number of units
      */
     private $units;
 
@@ -37,11 +35,11 @@ class StandardItem implements Item
      * Load item data
      *
      * @param string $description Post description
-     * @param Amount $units       Number of units
+     * @param int    $units       Number of units
      * @param Amount $unitCost    Cost per unit
      * @param Amount $vat         VAT rate, note that for 25% the value should be .25
      */
-    public function __construct(string $description, Amount $units, Amount $unitCost, Amount $vat = null)
+    public function __construct(string $description, int $units, Amount $unitCost, Amount $vat = null)
     {
         $this->description = $description;
         $this->units = $units;
@@ -60,7 +58,7 @@ class StandardItem implements Item
     /**
      * Get number of units
      */
-    public function getNrOfUnits(): Amount
+    public function getNrOfUnits(): int
     {
         return $this->units;
     }

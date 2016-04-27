@@ -19,7 +19,7 @@ interface Item
     /**
      * Get number of units
      */
-    public function getNrOfUnits(): Amount;
+    public function getNrOfUnits(): int;
 
     /**
      * Get cost per unit
@@ -27,24 +27,9 @@ interface Item
     public function getCostPerUnit(): Amount;
 
     /**
-     * Get total cost of all units (VAT excluded)
-     */
-    public function getTotalUnitCost(): Amount;
-
-    /**
      * Get VAT rate
      *
      * Note that 25% is represented as .25
      */
     public function getVatRate(): Amount;
-
-    /**
-     * Get total VAT cost for all units
-     */
-    public function getTotalVatCost(): Amount;
-
-    /**
-     * Get total item cost (VAT included)
-     */
-    public function getTotalCost(): Amount;
 }

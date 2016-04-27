@@ -6,7 +6,7 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class InvoiceTest extends \PHPUnit_Framework_TestCase
+class InvoiceTest extends BaseTestCase
 {
     private function getInvoice()
     {
@@ -27,17 +27,21 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
     private function getItems()
     {
         return [
-            new StandardItem(
-                '',
-                new Amount('1'),
-                new Amount('100', 2),
-                new Amount('.25', 2)
+            new ItemEnvelope(
+                new StandardItem(
+                    '',
+                    1,
+                    new Amount('100', 2),
+                    new Amount('.25', 2)
+                )
             ),
-            new StandardItem(
-                '',
-                new Amount('2'),
-                new Amount('50', 2),
-                new Amount('0', 2)
+            new ItemEnvelope(
+                new StandardItem(
+                    '',
+                    2,
+                    new Amount('50', 2),
+                    new Amount('0', 2)
+                )
             )
         ];
     }
@@ -65,8 +69,15 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
     public function testGetVatRates()
     {
         // Second item has VAT 0 and should not be included
-        $rates = $this->getItems();
-        array_pop($rates);
+        $rates = [
+            new StandardItem(
+                '',
+                1,
+                new Amount('100', 2),
+                new Amount('.25', 2)
+            )
+        ];
+
         $this->assertEquals($rates, $this->getInvoice()->getVatRates());
     }
 

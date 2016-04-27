@@ -37,7 +37,7 @@ class Invoice
     private $ocr;
 
     /**
-     * @var Item[] List if charged items
+     * @var ItemEnvelope[] List if charged items
      */
     private $items = [];
 
@@ -69,7 +69,7 @@ class Invoice
      * @param Buyer          $buyer        Registered buyer
      * @param string         $message      Invoice message
      * @param Ocr|null       $ocr          Payment reference number
-     * @param Item[]         $items        Array of charged items
+     * @param ItemEnvelope[] $items        Array of charged items
      * @param \DateTime|null $billDate     Date of invoice creation
      * @param integer        $expiresAfter Nr of days before invoice expires
      * @param Amount|null    $deduction    Prepaid amound to deduct
@@ -150,10 +150,9 @@ class Invoice
     /**
      * Add item to invoice
      *
-     * @param  Item $item
      * @return void
      */
-    public function addItem(Item $item)
+    public function addItem(ItemEnvelope $item)
     {
         $this->items[] = $item;
     }
@@ -161,7 +160,7 @@ class Invoice
     /**
      * Get list of charged items
      *
-     * @return Item[]
+     * @return ItemEnvelope[]
      */
     public function getItems(): array
     {
@@ -175,7 +174,7 @@ class Invoice
     {
         return array_reduce(
             $this->getItems(),
-            function (Amount $carry, Item $item) {
+            function (Amount $carry, ItemEnvelope $item) {
                 return $carry->add($item->getTotalUnitCost());
             },
             new Amount('0')
@@ -189,7 +188,7 @@ class Invoice
     {
         return array_reduce(
             $this->getItems(),
-            function (Amount $carry, Item $item) {
+            function (Amount $carry, ItemEnvelope $item) {
                 return $carry->add($item->getTotalVatCost());
             },
             new Amount('0')
@@ -222,7 +221,7 @@ class Invoice
                 if (!array_key_exists($key, $rates)) {
                     $rates[$key] = new StandardItem(
                         '',
-                        new Amount('1'),
+                        1,
                         new Amount('0'),
                         $item->getVatRate()
                     );

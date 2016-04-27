@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace byrokrat\billing;
 
-class OcrTest extends \PHPUnit_Framework_TestCase
+class OcrTest extends BaseTestCase
 {
     public function testValidOcr()
     {

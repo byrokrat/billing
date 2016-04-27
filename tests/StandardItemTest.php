@@ -6,13 +6,13 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class StandardItemTest extends \PHPUnit_Framework_TestCase
+class StandardItemTest extends BaseTestCase
 {
     private $item;
 
     protected function setup()
     {
-        $this->item = new StandardItem('desc', new Amount('2'), new Amount('100'), new Amount('.25'));
+        $this->item = new StandardItem('desc', 2, new Amount('100'), new Amount('.25'));
     }
 
     public function testGetDescription()
@@ -26,7 +26,7 @@ class StandardItemTest extends \PHPUnit_Framework_TestCase
     public function testGetNrOfUnits()
     {
         $this->assertEquals(
-            new Amount('2'),
+            2,
             $this->item->getNrOfUnits()
         );
     }
@@ -39,35 +39,11 @@ class StandardItemTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetTotalUnitCost()
-    {
-        $this->assertEquals(
-            new Amount('200'),
-            $this->item->getTotalUnitCost()
-        );
-    }
-
     public function testGetVatRate()
     {
         $this->assertEquals(
             new Amount('.25'),
             $this->item->getVatRate()
-        );
-    }
-
-    public function testGetTotalVatCost()
-    {
-        $this->assertEquals(
-            new Amount('50'),
-            $this->item->getTotalVatCost()
-        );
-    }
-
-    public function testGetTotalCost()
-    {
-        $this->assertEquals(
-            new Amount('250'),
-            $this->item->getTotalCost()
         );
     }
 }

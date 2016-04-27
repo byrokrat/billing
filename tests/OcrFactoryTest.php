@@ -7,7 +7,7 @@ namespace byrokrat\billing;
 /**
  * @covers byrokrat\billing\OcrFactory
  */
-class OcrFactoryTest extends \PHPUnit_Framework_TestCase
+class OcrFactoryTest extends BaseTestCase
 {
     public function testCreateOcr()
     {

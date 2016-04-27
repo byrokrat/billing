@@ -6,7 +6,7 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
+class InvoiceBuilderTest extends BaseTestCase
 {
     private $builder;
 
@@ -39,7 +39,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
     public function testBuildInvoice()
     {
         $ocr = new Ocr('232');
-        $item = new StandardItem('', new Amount('0'), new Amount('0'));
+        $item = new StandardItem('', 0, new Amount('0'));
         $date = new \DateTime();
         $deduction = new Amount('100');
 
@@ -55,7 +55,7 @@ class InvoiceBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('message', $invoice->getMessage());
         $this->assertSame($ocr, $invoice->getOcr());
-        $this->assertSame([$item], $invoice->getItems());
+        $this->assertEquals([new ItemEnvelope($item)], $invoice->getItems());
         $this->assertSame($date, $invoice->getBillDate());
         $this->assertSame($deduction, $invoice->getDeduction());
         $this->assertSame('EUR', $invoice->getCurrency());
