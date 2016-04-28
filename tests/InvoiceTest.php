@@ -16,7 +16,7 @@ class InvoiceTest extends BaseTestCase
             $this->getMock(Buyer::CLASS),
             'message',
             '133',
-            $this->getItems(),
+            $this->getMock(ItemBasket::CLASS),
             new \DateTime('2014-01-01'),
             1,
             new Amount('100'),
@@ -24,46 +24,31 @@ class InvoiceTest extends BaseTestCase
         );
     }
 
-    private function getItems()
+    public function testGetInvoiceTotal()
     {
-        return [
-            new ItemEnvelope(
-                $this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))
-            ),
-            new ItemEnvelope(
-                $this->getBillableMock('', new Amount('50'), 2, new Amount('0'))
-            )
-        ];
-    }
-
-    public function testGetItems()
-    {
-        foreach ($this->getInvoice()->getItems() as $item) {
-            $this->assertInstanceOf(ItemEnvelope::CLASS, $item);
-        }
-    }
-
-    public function testGetTotalVatCost()
-    {
-        $this->assertEquals('25', (string)$this->getInvoice()->getTotalVatCost());
-    }
-
-    public function testGetTotalUnitCost()
-    {
-        $this->assertEquals('200', (string)$this->getInvoice()->getTotalUnitCost());
-    }
-
-    public function testGetTotalCost()
-    {
-        $this->assertEquals('125', (string)$this->getInvoice()->getTotalCost());
-    }
-
-    public function testGetVatRates()
-    {
-        $this->assertCount(
-            1,
-            $this->getInvoice()->getVatRates(),
-            'Second item has VAT 0 and should not be included'
+        $this->assertEquals(
+            new Amount('125'),
+            (
+                new Invoice(
+                    '',
+                    $this->getMock(Seller::CLASS),
+                    $this->getMock(Buyer::CLASS),
+                    '',
+                    '',
+                    new ItemBasket(
+                        new ItemEnvelope(
+                            $this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))
+                        ),
+                        new ItemEnvelope(
+                            $this->getBillableMock('', new Amount('50'), 2, new Amount('0'))
+                        )
+                    ),
+                    null,
+                    0,
+                    new Amount('100')
+                )
+            )->getInvoiceTotal(),
+            '1 unit á 100 and 25% VAT plus 2 units á 50 minus 100 in deduction should equal 125'
         );
     }
 
@@ -75,7 +60,7 @@ class InvoiceTest extends BaseTestCase
     public function testGetSeller()
     {
         $this->assertInstanceOf(
-            'byrokrat\billing\Seller',
+            Seller::CLASS,
             $this->getInvoice()->getSeller()
         );
     }
@@ -83,7 +68,7 @@ class InvoiceTest extends BaseTestCase
     public function testGetBuyer()
     {
         $this->assertInstanceOf(
-            'byrokrat\billing\Buyer',
+            Buyer::CLASS,
             $this->getInvoice()->getBuyer()
         );
     }

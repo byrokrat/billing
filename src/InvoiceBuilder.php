@@ -47,9 +47,9 @@ class InvoiceBuilder
     private $ocrTools;
 
     /**
-     * @var ItemEnvelope[] List of charged items
+     * @var ItemBasket Container of charged items
      */
-    private $items = [];
+    private $itemBasket;
 
     /**
      * @var \DateTime Invoice creation date
@@ -90,7 +90,7 @@ class InvoiceBuilder
         $this->buyer = null;
         $this->message = '';
         $this->ocr = '';
-        $this->items = [];
+        $this->itemBasket = new ItemBasket;
         $this->generateOcr = false;
         $this->billDate = null;
         $this->expiresAfter = 30;
@@ -110,7 +110,7 @@ class InvoiceBuilder
             $this->getBuyer(),
             $this->message,
             $this->getOcr(),
-            $this->items,
+            $this->itemBasket,
             $this->billDate ?: new \DateTime,
             $this->expiresAfter,
             $this->deduction,
@@ -229,7 +229,7 @@ class InvoiceBuilder
      */
     public function addItem(Billable $billable): self
     {
-        $this->items[] = new ItemEnvelope($billable);
+        $this->itemBasket->addItem(new ItemEnvelope($billable));
         return $this;
     }
 

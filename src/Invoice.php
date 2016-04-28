@@ -37,9 +37,9 @@ class Invoice
     private $ocr;
 
     /**
-     * @var ItemEnvelope[] List if charged items
+     * @var ItemBasket Container for charged items
      */
-    private $items = [];
+    private $itemBasket = [];
 
     /**
      * @var \DateTime Creation date
@@ -69,7 +69,7 @@ class Invoice
      * @param Buyer          $buyer        Registered buyer
      * @param string         $message      Invoice message
      * @param string         $ocr          Payment reference number
-     * @param ItemEnvelope[] $items        Array of charged items
+     * @param ItemBasket     $itemBasket  Container for charged items
      * @param \DateTime|null $billDate     Date of invoice creation
      * @param integer        $expiresAfter Nr of days before invoice expires
      * @param Amount|null    $deduction    Prepaid amound to deduct
@@ -81,7 +81,7 @@ class Invoice
         Buyer $buyer,
         string $message = '',
         string $ocr = '',
-        array $items = array(),
+        ItemBasket $itemBasket = null,
         \DateTime $billDate = null,
         int $expiresAfter = 30,
         Amount $deduction = null,
@@ -90,11 +90,7 @@ class Invoice
         $this->serial = $serial;
         $this->seller = $seller;
         $this->buyer = $buyer;
-
-        foreach ($items as $item) {
-            $this->addItem($item);
-        }
-
+        $this->itemBasket = $itemBasket;
         $this->ocr = $ocr;
         $this->message = $message;
         $this->billDate = $billDate ?: new \DateTime;
@@ -144,97 +140,19 @@ class Invoice
     }
 
     /**
-     * Add item to invoice
-     *
-     * @return void
+     * Get item container
      */
-    public function addItem(ItemEnvelope $item)
+    public function getItems(): ItemBasket
     {
-        $this->items[] = $item;
+        return $this->itemBasket;
     }
 
     /**
-     * Get list of charged items
-     *
-     * @return ItemEnvelope[]
+     * Get charged amount (including VAT and deduction)
      */
-    public function getItems(): array
+    public function getInvoiceTotal(): Amount
     {
-        return $this->items;
-    }
-
-    /**
-     * Get total cost of all items (VAT excluded)
-     */
-    public function getTotalUnitCost(): Amount
-    {
-        return array_reduce(
-            $this->getItems(),
-            function (Amount $carry, ItemEnvelope $item) {
-                return $carry->add($item->getTotalUnitCost());
-            },
-            new Amount('0')
-        );
-    }
-
-    /**
-     * Get total VAT cost for all items
-     */
-    public function getTotalVatCost(): Amount
-    {
-        return array_reduce(
-            $this->getItems(),
-            function (Amount $carry, ItemEnvelope $item) {
-                return $carry->add($item->getTotalVatCost());
-            },
-            new Amount('0')
-        );
-    }
-
-    /**
-     * Get charged amount (VAT included)
-     */
-    public function getTotalCost(): Amount
-    {
-        return $this->getTotalVatCost()
-            ->add($this->getTotalUnitCost())
-            ->subtract($this->getDeduction());
-    }
-
-    /**
-     * Get charged vat amounts for non-zero vat rates
-     *
-     * @return Item[]
-     */
-    public function getVatRates(): array
-    {
-        $rates = [];
-
-        foreach ($this->getItems() as $item) {
-            if ($item->getVatRate()->isPositive()) {
-                $key = (string)$item->getVatRate();
-
-                if (!array_key_exists($key, $rates)) {
-                    $rates[$key] = new SimpleItem(
-                        '',
-                        new Amount('0'),
-                        1,
-                        $item->getVatRate()
-                    );
-                }
-
-                $rates[$key] = new SimpleItem(
-                    $rates[$key]->getBillingDescription(),
-                    $rates[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
-                    $rates[$key]->getNrOfUnits(),
-                    $rates[$key]->getVatRate()
-                );
-            }
-        }
-
-        ksort($rates);
-
-        return array_values($rates);
+        return $this->getItems()->getTotalCost()->subtract($this->getDeduction());
     }
 
     /**

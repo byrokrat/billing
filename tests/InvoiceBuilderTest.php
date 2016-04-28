@@ -55,7 +55,7 @@ class InvoiceBuilderTest extends BaseTestCase
 
         $this->assertSame('message', $invoice->getMessage());
         $this->assertSame($ocr, $invoice->getOcr());
-        $this->assertEquals([new ItemEnvelope($item)], $invoice->getItems());
+        $this->assertInstanceOf(ItemBasket::CLASS, $invoice->getItems());
         $this->assertSame($date, $invoice->getBillDate());
         $this->assertSame($deduction, $invoice->getDeduction());
         $this->assertSame('EUR', $invoice->getCurrency());
