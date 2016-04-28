@@ -12,8 +12,8 @@ class InvoiceTest extends BaseTestCase
     {
         return new Invoice(
             '1',
-            $this->getMock('byrokrat\billing\Seller'),
-            $this->getMock('byrokrat\billing\Buyer'),
+            $this->getMock(Seller::CLASS),
+            $this->getMock(Buyer::CLASS),
             'message',
             '133',
             $this->getItems(),
@@ -28,27 +28,19 @@ class InvoiceTest extends BaseTestCase
     {
         return [
             new ItemEnvelope(
-                new StandardItem(
-                    '',
-                    1,
-                    new Amount('100', 2),
-                    new Amount('.25', 2)
-                )
+                $this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))
             ),
             new ItemEnvelope(
-                new StandardItem(
-                    '',
-                    2,
-                    new Amount('50', 2),
-                    new Amount('0', 2)
-                )
+                $this->getBillableMock('', new Amount('50'), 2, new Amount('0'))
             )
         ];
     }
 
     public function testGetItems()
     {
-        $this->assertEquals($this->getItems(), $this->getInvoice()->getItems());
+        foreach ($this->getInvoice()->getItems() as $item) {
+            $this->assertInstanceOf(ItemEnvelope::CLASS, $item);
+        }
     }
 
     public function testGetTotalVatCost()
@@ -68,17 +60,11 @@ class InvoiceTest extends BaseTestCase
 
     public function testGetVatRates()
     {
-        // Second item has VAT 0 and should not be included
-        $rates = [
-            new StandardItem(
-                '',
-                1,
-                new Amount('100', 2),
-                new Amount('.25', 2)
-            )
-        ];
-
-        $this->assertEquals($rates, $this->getInvoice()->getVatRates());
+        $this->assertCount(
+            1,
+            $this->getInvoice()->getVatRates(),
+            'Second item has VAT 0 and should not be included'
+        );
     }
 
     public function testGetSerial()

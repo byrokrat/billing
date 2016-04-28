@@ -39,7 +39,7 @@ class InvoiceBuilderTest extends BaseTestCase
     public function testBuildInvoice()
     {
         $ocr = '232';
-        $item = new StandardItem('', 0, new Amount('0'));
+        $item = $this->getBillableMock('', new Amount('0'));
         $date = new \DateTime();
         $deduction = new Amount('100');
 

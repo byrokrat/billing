@@ -12,15 +12,7 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             'desc',
-            (new ItemEnvelope($this->getItemMock('desc')))->getDescription()
-        );
-    }
-
-    public function testGetNrOfUnits()
-    {
-        $this->assertEquals(
-            2,
-            (new ItemEnvelope($this->getItemMock('', 2)))->getNrOfUnits()
+            (new ItemEnvelope($this->getBillableMock('desc')))->getBillingDescription()
         );
     }
 
@@ -28,7 +20,15 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('100'),
-            (new ItemEnvelope($this->getItemMock('', 1, new Amount('100'))))->getCostPerUnit()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'))))->getCostPerUnit()
+        );
+    }
+
+    public function testGetNrOfUnits()
+    {
+        $this->assertEquals(
+            2,
+            (new ItemEnvelope($this->getBillableMock('', null, 2)))->getNrOfUnits()
         );
     }
 
@@ -36,7 +36,7 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('.25'),
-            (new ItemEnvelope($this->getItemMock('', 1, null, new Amount('.25'))))->getVatRate()
+            (new ItemEnvelope($this->getBillableMock('', null, 1, new Amount('.25'))))->getVatRate()
         );
     }
 
@@ -44,7 +44,7 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('200'),
-            (new ItemEnvelope($this->getItemMock('', 2, new Amount('100'))))->getTotalUnitCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2)))->getTotalUnitCost()
         );
     }
 
@@ -52,11 +52,11 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('25'),
-            (new ItemEnvelope($this->getItemMock('', 1, new Amount('100'), new Amount('.25'))))->getTotalVatCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))))->getTotalVatCost()
         );
         $this->assertEquals(
             new Amount('50'),
-            (new ItemEnvelope($this->getItemMock('', 2, new Amount('100'), new Amount('.25'))))->getTotalVatCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('.25'))))->getTotalVatCost()
         );
     }
 
@@ -64,7 +64,7 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('250'),
-            (new ItemEnvelope($this->getItemMock('', 2, new Amount('100'), new Amount('.25'))))->getTotalCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('.25'))))->getTotalCost()
         );
     }
 }

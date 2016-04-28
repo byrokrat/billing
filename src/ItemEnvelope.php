@@ -7,29 +7,29 @@ namespace byrokrat\billing;
 use byrokrat\amount\Amount;
 
 /**
- * Decorates a chargable item with sum calculations
+ * Decorates a chargable billable with sum calculations
  */
-class ItemEnvelope implements Item
+class ItemEnvelope implements Billable
 {
     /**
-     * @var Item
+     * @var Billable
      */
-    private $item;
+    private $billable;
 
     /**
-     * Pack item at construct
+     * Pack billable at construct
      */
-    public function __construct(Item $item)
+    public function __construct(Billable $billable)
     {
-        $this->item = $item;
+        $this->billable = $billable;
     }
 
     /**
-     * Get packed item
+     * Get packed billable
      */
-    public function getItem(): Item
+    public function getBillable(): Billable
     {
-        return $this->item;
+        return $this->billable;
     }
 
     /**
@@ -49,7 +49,7 @@ class ItemEnvelope implements Item
     }
 
     /**
-     * Get total item cost (VAT included)
+     * Get total cost (VAT included)
      */
     public function getTotalCost(): Amount
     {
@@ -57,34 +57,34 @@ class ItemEnvelope implements Item
     }
 
     /**
-     * Pass to decorated item
+     * Pass to decorated billable
      */
-    public function getDescription(): string
+    public function getBillingDescription(): string
     {
-        return $this->getItem()->getDescription();
+        return $this->getBillable()->getBillingDescription();
     }
 
     /**
-     * Pass to decorated item
-     */
-    public function getNrOfUnits(): int
-    {
-        return $this->getItem()->getNrOfUnits();
-    }
-
-    /**
-     * Pass to decorated item
+     * Pass to decorated billable
      */
     public function getCostPerUnit(): Amount
     {
-        return $this->getItem()->getCostPerUnit();
+        return $this->getBillable()->getCostPerUnit();
     }
 
     /**
-     * Pass to decorated item
+     * Pass to decorated billable
+     */
+    public function getNrOfUnits(): int
+    {
+        return $this->getBillable()->getNrOfUnits();
+    }
+
+    /**
+     * Pass to decorated billable
      */
     public function getVatRate(): Amount
     {
-        return $this->getItem()->getVatRate();
+        return $this->getBillable()->getVatRate();
     }
 }

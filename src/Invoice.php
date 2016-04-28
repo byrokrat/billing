@@ -215,24 +215,25 @@ class Invoice
                 $key = (string)$item->getVatRate();
 
                 if (!array_key_exists($key, $rates)) {
-                    $rates[$key] = new StandardItem(
+                    $rates[$key] = new SimpleItem(
                         '',
-                        1,
                         new Amount('0'),
+                        1,
                         $item->getVatRate()
                     );
                 }
 
-                $rates[$key] = new StandardItem(
-                    $rates[$key]->getDescription(),
-                    $rates[$key]->getNrOfUnits(),
+                $rates[$key] = new SimpleItem(
+                    $rates[$key]->getBillingDescription(),
                     $rates[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
+                    $rates[$key]->getNrOfUnits(),
                     $rates[$key]->getVatRate()
                 );
             }
         }
 
         ksort($rates);
+
         return array_values($rates);
     }
 

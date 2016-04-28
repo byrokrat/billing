@@ -225,11 +225,11 @@ class InvoiceBuilder
     }
 
     /**
-     * Add item to invoice
+     * Add billable to invoice
      */
-    public function addItem(Item $item): self
+    public function addItem(Billable $billable): self
     {
-        $this->items[] = new ItemEnvelope($item);
+        $this->items[] = new ItemEnvelope($billable);
         return $this;
     }
 
