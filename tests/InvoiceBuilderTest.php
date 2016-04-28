@@ -20,19 +20,19 @@ class InvoiceBuilderTest extends BaseTestCase
 
     public function testExceptionWhenSerialNotSet()
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new InvoiceBuilder)->getSerial();
     }
 
     public function testExceptionWhenSellerNotSet()
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new InvoiceBuilder)->getSeller();
     }
 
     public function testExceptionWhenBuyerNotSet()
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new InvoiceBuilder)->getBuyer();
     }
 

@@ -130,14 +130,14 @@ class InvoiceBuilder
     /**
      * Get invoice serial number
      *
-     * @throws RuntimeException If serial is not set
+     * @throws Exception If serial is not set
      */
     public function getSerial(): string
     {
         if (isset($this->serial)) {
             return $this->serial;
         }
-        throw new RuntimeException("Unable to create invoice: serial not set");
+        throw new Exception("Unable to create invoice: serial not set");
     }
 
     /**
@@ -152,14 +152,14 @@ class InvoiceBuilder
     /**
      * Get seller
      *
-     * @throws RuntimeException If seller is not set
+     * @throws Exception If seller is not set
      */
     public function getSeller(): Seller
     {
         if (isset($this->seller)) {
             return $this->seller;
         }
-        throw new RuntimeException("Unable to create Invoice: seller not set");
+        throw new Exception("Unable to create Invoice: seller not set");
     }
 
     /**
@@ -174,14 +174,14 @@ class InvoiceBuilder
     /**
      * Get buyer
      *
-     * @throws RuntimeException If buyer is not set
+     * @throws Exception If buyer is not set
      */
     public function getBuyer(): Buyer
     {
         if (isset($this->buyer)) {
             return $this->buyer;
         }
-        throw new RuntimeException("Unable to create Invoice: buyer not set");
+        throw new Exception("Unable to create Invoice: buyer not set");
     }
 
     /**

@@ -24,20 +24,20 @@ class OcrTools
     /**
      * Validate OCR number
      *
-     * @throws RuntimeException If ocr is not valid, including check and length digits
+     * @throws Exception If ocr is not valid, including check and length digits
      */
     public function validate(string $ocr): bool
     {
         if (!ctype_digit($ocr) || strlen($ocr) > 25 || strlen($ocr) < 2) {
-            throw new RuntimeException("Number must be numeric and contain between 2 and 25 digits");
+            throw new Exception("Number must be numeric and contain between 2 and 25 digits");
         }
 
         if (substr($ocr, -2, 1) != $this->calculateLengthDigit(substr($ocr, 0, -2))) {
-            throw new RuntimeException("Invalid length digit");
+            throw new Exception("Invalid length digit");
         }
 
         if (!$this->luhn->isValid($ocr)) {
-            throw new RuntimeException("Invalid check digit");
+            throw new Exception("Invalid check digit");
         }
 
         return true;
@@ -46,12 +46,12 @@ class OcrTools
     /**
      * Create ocr from number by appending check and length digits
      *
-     * @throws RuntimeException If number is non-numeric or longer than 23 characters
+     * @throws Exception If number is non-numeric or longer than 23 characters
      */
     public function create(string $number): string
     {
         if (!ctype_digit($number) || strlen($number) > 23) {
-            throw new RuntimeException("Number must be numeric and contain a maximum of 23 digits");
+            throw new Exception("Number must be numeric and contain a maximum of 23 digits");
         }
 
         $number .= $this->calculateLengthDigit($number);

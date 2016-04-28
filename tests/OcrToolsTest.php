@@ -16,13 +16,13 @@ class OcrToolsTest extends BaseTestCase
 
     public function testExceptionOnCreateWithInvalidLength()
     {
-        $this->setExpectedException(RuntimeException::CLASS);
+        $this->setExpectedException(Exception::CLASS);
         (new OcrTools)->create('123456789012345678901234');
     }
 
     public function testExceptionOnCreateWithNonNumericValue()
     {
-        $this->setExpectedException(RuntimeException::CLASS);
+        $this->setExpectedException(Exception::CLASS);
         (new OcrTools)->create('123L');
     }
 
@@ -47,19 +47,19 @@ class OcrToolsTest extends BaseTestCase
      */
     public function testExceptionOnInvalidOcrStructure($ocr)
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new OcrTools)->validate($ocr);
     }
 
     public function testExceptionOnInvalidOcrLengthDigit()
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new OcrTools)->validate('12345602');
     }
 
     public function testExceptionOnInvalidOcrCheckDigit()
     {
-        $this->setExpectedException('byrokrat\billing\RuntimeException');
+        $this->setExpectedException(Exception::CLASS);
         (new OcrTools)->validate('12345680');
     }
 }
