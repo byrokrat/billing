@@ -148,7 +148,7 @@ class ItemBasket implements \IteratorAggregate
         $rates = [];
 
         foreach ($this as $envelope) {
-            if ($envelope->getVatRate()->isPositive()) {
+            if ($envelope->getVatRate() > 0) {
                 $key = (string)$envelope->getVatRate();
 
                 if (!array_key_exists($key, $rates)) {

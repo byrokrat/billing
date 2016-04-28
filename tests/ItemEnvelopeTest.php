@@ -35,8 +35,8 @@ class ItemEnvelopeTest extends BaseTestCase
     public function testGetVatRate()
     {
         $this->assertEquals(
-            new Amount('.25'),
-            (new ItemEnvelope($this->getBillableMock('', null, 1, new Amount('.25'))))->getVatRate()
+            25,
+            (new ItemEnvelope($this->getBillableMock('', null, 1, 25)))->getVatRate()
         );
     }
 
@@ -52,11 +52,11 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('25'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))))->getTotalVatCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)))->getTotalVatCost()
         );
         $this->assertEquals(
-            new Amount('50'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('.25'))))->getTotalVatCost()
+            new Amount('25'),
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, 12.5)))->getTotalVatCost()
         );
     }
 
@@ -64,7 +64,7 @@ class ItemEnvelopeTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('250'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('.25'))))->getTotalCost()
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, 25)))->getTotalCost()
         );
     }
 }

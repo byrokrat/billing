@@ -29,8 +29,8 @@ class ItemBasketTest extends BaseTestCase
             $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('0')))
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, 0))
                 )
             )->$method()
         );
@@ -57,8 +57,8 @@ class ItemBasketTest extends BaseTestCase
             $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('.25'))),
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 2, new Amount('.25')))
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 2, 25))
                 )
             )->$method()
         );
@@ -71,8 +71,8 @@ class ItemBasketTest extends BaseTestCase
             1,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('0')))
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 0))
                 )
             )->getVatRates(),
             'Second item has VAT 0 and should not be included'
@@ -85,8 +85,8 @@ class ItemBasketTest extends BaseTestCase
             Currency\SEK::CLASS,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('.25'))),
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('0')))
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 0))
                 )
             )->getVatRates()[0]->getCostPerUnit()
         );

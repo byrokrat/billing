@@ -35,7 +35,7 @@ class SimpleItemTest extends BaseTestCase
     public function testGetVatRate()
     {
         $this->assertEquals(
-            new Amount('.25'),
+            25,
             (new SimpleItem('', new Amount('0')))->getVatRate()
         );
     }

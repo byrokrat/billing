@@ -37,10 +37,10 @@ class InvoiceTest extends BaseTestCase
                     '',
                     new ItemBasket(
                         new ItemEnvelope(
-                            $this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))
+                            $this->getBillableMock('', new Amount('100'), 1, 25)
                         ),
                         new ItemEnvelope(
-                            $this->getBillableMock('', new Amount('50'), 2, new Amount('0'))
+                            $this->getBillableMock('', new Amount('50'), 2, 0)
                         )
                     ),
                     null,

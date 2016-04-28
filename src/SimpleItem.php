@@ -27,21 +27,21 @@ class SimpleItem implements Billable
     private $units;
 
     /**
-     * @var Amount
+     * @var float
      */
     private $vat;
 
     /**
      * Set immutable data at construct
      *
-     * Note that a VAT of 25% is represented as .25
+     * Note that a VAT of 25% is represented as 25
      */
-    public function __construct(string $description, Amount $unitCost, int $units = 1, Amount $vat = null)
+    public function __construct(string $description, Amount $unitCost, int $units = 1, float $vat = 25)
     {
         $this->description = $description;
         $this->unitCost = $unitCost;
         $this->units = $units;
-        $this->vat = $vat ?: new Amount('.25');
+        $this->vat = $vat;
     }
 
     public function getBillingDescription(): string
@@ -59,7 +59,7 @@ class SimpleItem implements Billable
         return $this->units;
     }
 
-    public function getVatRate(): Amount
+    public function getVatRate(): float
     {
         return $this->vat;
     }

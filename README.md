@@ -28,7 +28,7 @@ $item = new SimpleItem(
     'Item description',
     new EUR('100'),
     1,
-    new Amount('.25')
+    25
 );
 ```
 
@@ -59,7 +59,7 @@ echo $invoice->getInvoiceTotal();
 
 Billing uses an interface centered design:
 
-* [`Item`](/src/Item.php) represents a purchased item
+* [`Billable`](/src/Billable.php) represents a purchased item
 * [`Seller`](/src/Seller.php) represents the selling party
 * [`Buyer`](/src/Buyer.php) represents the buying party
 

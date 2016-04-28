@@ -29,7 +29,7 @@ interface Billable
     /**
      * Get VAT rate applicable on billed item
      *
-     * Note that 25% is represented as .25
+     * Note that 25% is represented as 25
      */
-    public function getVatRate(): Amount;
+    public function getVatRate(): float;
 }
