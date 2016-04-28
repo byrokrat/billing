@@ -50,7 +50,6 @@ class InvoiceBuilderTest extends BaseTestCase
             ->setBillDate($date)
             ->setExpiresAfter(1)
             ->setDeduction($deduction)
-            ->setCurrency('EUR')
             ->buildInvoice();
 
         $this->assertSame('message', $invoice->getMessage());
@@ -58,7 +57,6 @@ class InvoiceBuilderTest extends BaseTestCase
         $this->assertInstanceOf(ItemBasket::CLASS, $invoice->getItems());
         $this->assertSame($date, $invoice->getBillDate());
         $this->assertSame($deduction, $invoice->getDeduction());
-        $this->assertSame('EUR', $invoice->getCurrency());
     }
 
     public function testGnerateWithoutBillDate()

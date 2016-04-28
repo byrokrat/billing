@@ -20,14 +20,14 @@ Usage
 Create items to bill:
 
 ```php
-use byrokrat\billing\StandardItem;
-use byrokrat\amount\Amount;
+use byrokrat\billing\SimpleItem;
+use byrokrat\amount\Currency\EUR;
 
 // 1 unit of a 100 EUR item with 25% VAT
-$item = new StandardItem(
+$item = new SimpleItem(
     'Item description',
-    new Amount('1'),
-    new Amount('100'),
+    new EUR('100'),
+    1,
     new Amount('.25')
 );
 ```
@@ -45,14 +45,13 @@ $invoice = (new InvoiceBuilder)
     ->setMessage('Pay in time or else!')
     ->generateOcr()
     ->addItem($item)
-    ->setCurrency('EUR')
     ->buildInvoice();
 ```
 
 [`Invoice`](/src/Invoice.php) represents the actual invoice:
 
 ```php
-echo $invoice->getTotalCost();
+echo $invoice->getInvoiceTotal();
 // prints 125 (100 EUR plus 25% VAT)
 ```
 
@@ -64,7 +63,7 @@ Billing uses an interface centered design:
 * [`Seller`](/src/Seller.php) represents the selling party
 * [`Buyer`](/src/Buyer.php) represents the buying party
 
-[`StandardItem`](/src/StandardItem.php) and [`StandardActor`](/src/StandardActor.php)
+[`SimpleItem`](/src/SimpleItem.php) and [`StandardActor`](/src/StandardActor.php)
 offers simple implementations of these interfaces, but you may of course provide your
 own implementations and extend the interfaces as needed.
 
@@ -72,24 +71,19 @@ own implementations and extend the interfaces as needed.
 
 [`Invoice`](/src/Invoice.php) defines the following api:
 
-Method signature    | returns  | description
-:------------------ | :------- | :----------------------------------------------------
-getSerial()         | string   | Get invoice serial number
-getSeller()         | Seller   | Get registered seller
-getBuyer()          | Buyer    | Get registered buyer
-getMessage()        | string   | Get invoice message
-getOcr()            | Ocr      | Get invoice reference number
-addItem(Item $item) | null     | Add item to invoice
-getItems()          | Item[]   | Get list of charged items
-getTotalUnitCost()  | Amount   | Get total cost of all items (VAT excluded)
-getTotalVatCost()   | Amount   | Get total VAT cost for all items
-getTotalCost()      | Amount   | Get charged amount (VAT included)
-getVatRates()       | Item[]   | Get charged vat amounts for non-zero vat rates
-getBillDate()       | DateTime | Get date of invoice creation
-getExpiresAfter()   | integer  | Get number of days before invoice expires
-getExpirationDate() | DateTime | Get date when invoice expires
-getDeduction()      | Amount   | Get prepaid amound to deduct
-getCurrency()       | string   | Get 3-letter ISO 4217 code indicating invoice currency
+Method signature    | returns                             | description
+:------------------ | :---------------------------------- | :------------------------------------------
+getSerial()         | string                              | Get invoice serial number
+getSeller()         | [`Seller`](/src/Seller.php)         | Get registered seller
+getBuyer()          | [`Buyer`](/src/Buyer.php)           | Get registered buyer
+getMessage()        | string                              | Get invoice message
+getOcr()            | string                              | Get invoice reference number
+getItems()          | [`ItemBasket`](/src/ItemBasket.php) | Get item basket
+getInvoiceTotal()   | Amount                              | Get charged amount (VAT included)
+getBillDate()       | DateTime                            | Get date of invoice creation
+getExpiresAfter()   | integer                             | Get number of days before invoice expires
+getExpirationDate() | DateTime                            | Get date when invoice expires
+getDeduction()      | Amount                              | Get deducted prepaid amound
 
 Credits
 -------

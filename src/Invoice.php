@@ -57,23 +57,17 @@ class Invoice
     private $deduction;
 
     /**
-     * @var string 3-letter ISO 4217 currency code indicating currency
-     */
-    private $currency;
-
-    /**
      * Construct invoice
      *
-     * @param string         $serial       Invoice serial number
-     * @param Seller         $seller       Registered seller
-     * @param Buyer          $buyer        Registered buyer
-     * @param string         $message      Invoice message
-     * @param string         $ocr          Payment reference number
-     * @param ItemBasket     $itemBasket  Container for charged items
-     * @param \DateTime|null $billDate     Date of invoice creation
-     * @param integer        $expiresAfter Nr of days before invoice expires
-     * @param Amount|null    $deduction    Prepaid amound to deduct
-     * @param string         $currency     3-letter ISO 4217 currency code indicating currency
+     * @param string     $serial       Invoice serial number
+     * @param Seller     $seller       Registered seller
+     * @param Buyer      $buyer        Registered buyer
+     * @param string     $message      Invoice message
+     * @param string     $ocr          Payment reference number
+     * @param ItemBasket $itemBasket   Container for charged items
+     * @param \DateTime  $billDate     Date of invoice creation
+     * @param integer    $expiresAfter Nr of days before invoice expires
+     * @param Amount     $deduction    Prepaid amound to deduct
      */
     public function __construct(
         string $serial,
@@ -84,8 +78,7 @@ class Invoice
         ItemBasket $itemBasket = null,
         \DateTime $billDate = null,
         int $expiresAfter = 30,
-        Amount $deduction = null,
-        string $currency = 'SEK'
+        Amount $deduction = null
     ) {
         $this->serial = $serial;
         $this->seller = $seller;
@@ -95,8 +88,7 @@ class Invoice
         $this->message = $message;
         $this->billDate = $billDate ?: new \DateTime;
         $this->expiresAfter = $expiresAfter;
-        $this->deduction = $deduction ?: new Amount('0');
-        $this->currency = $currency;
+        $this->deduction = $deduction;
     }
 
     /**
@@ -187,14 +179,10 @@ class Invoice
      */
     public function getDeduction(): Amount
     {
-        return $this->deduction;
-    }
+        if (!isset($this->deduction)) {
+            return $this->itemBasket->createCurrencyObject('0');
+        }
 
-    /**
-     * Get the 3-letter ISO 4217 currency code indicating the invoice currency
-     */
-    public function getCurrency(): string
-    {
-        return $this->currency;
+        return $this->deduction;
     }
 }

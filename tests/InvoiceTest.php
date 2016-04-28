@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
+use byrokrat\amount\Currency;
 
 class InvoiceTest extends BaseTestCase
 {
@@ -19,8 +20,7 @@ class InvoiceTest extends BaseTestCase
             $this->getMock(ItemBasket::CLASS),
             new \DateTime('2014-01-01'),
             1,
-            new Amount('100'),
-            'SEK'
+            new Amount('100')
         );
     }
 
@@ -50,6 +50,50 @@ class InvoiceTest extends BaseTestCase
             )->getInvoiceTotal(),
             '1 unit á 100 and 25% VAT plus 2 units á 50 minus 100 in deduction should equal 125'
         );
+    }
+
+    public function testDeductionUsingDefaultCurrency()
+    {
+        $this->assertEquals(
+            new Currency\SEK('125'),
+            (
+                new Invoice(
+                    '',
+                    $this->getMock(Seller::CLASS),
+                    $this->getMock(Buyer::CLASS),
+                    '',
+                    '',
+                    new ItemBasket(
+                        new ItemEnvelope(
+                            $this->getBillableMock('', new Currency\SEK('100'))
+                        )
+                    )
+                )
+            )->getInvoiceTotal(),
+            'Deduction of 0 SEK should work as expected'
+        );
+    }
+
+    public function testExceptionUsingInvalidDeductionCurrency()
+    {
+        $this->setExpectedException('byrokrat\amount\InvalidArgumentException');
+        (
+            new Invoice(
+                '',
+                $this->getMock(Seller::CLASS),
+                $this->getMock(Buyer::CLASS),
+                '',
+                '',
+                new ItemBasket(
+                    new ItemEnvelope(
+                        $this->getBillableMock('', new Currency\SEK('100'))
+                    )
+                ),
+                null,
+                0,
+                new Currency\EUR('100')
+            )
+        )->getInvoiceTotal();
     }
 
     public function testGetSerial()
@@ -101,10 +145,5 @@ class InvoiceTest extends BaseTestCase
     public function testGetDeduction()
     {
         $this->assertEquals(new Amount('100'), $this->getInvoice()->getDeduction());
-    }
-
-    public function testGetCurrency()
-    {
-        $this->assertEquals('SEK', $this->getInvoice()->getCurrency());
     }
 }

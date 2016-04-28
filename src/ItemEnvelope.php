@@ -57,6 +57,14 @@ class ItemEnvelope implements Billable
     }
 
     /**
+     * Get classname of currency used in billable
+     */
+    public function getCurrencyClassname(): string
+    {
+        return get_class($this->getCostPerUnit());
+    }
+
+    /**
      * Pass to decorated billable
      */
     public function getBillingDescription(): string

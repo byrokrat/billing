@@ -17,21 +17,59 @@ class ItemBasket implements \IteratorAggregate
     private $items = [];
 
     /**
+     * @var string Classname of currency used in basket
+     */
+    private $currencyClassname = '';
+
+    /**
      * Optionally load items at construct
      */
-    public function __construct(ItemEnvelope ...$items) {
-        foreach ($items as $item) {
-            $this->addItem($item);
+    public function __construct(ItemEnvelope ...$items)
+    {
+        foreach ($items as $envelope) {
+            $this->addItem($envelope);
         }
     }
 
     /**
      * Add item to basket
+     *
+     * @throws Exception If two items with different currencies are added
      */
-    public function addItem(ItemEnvelope $item): self
+    public function addItem(ItemEnvelope $envelope): self
     {
-        $this->items[] = $item;
+        if (!$this->currencyClassname) {
+            $this->currencyClassname = $envelope->getCurrencyClassname();
+        }
+
+        if ($envelope->getCurrencyClassname() != $this->getCurrencyClassname()) {
+            throw new Exception('Unable to load items with different currencies');
+        }
+
+        $this->items[] = $envelope;
         return $this;
+    }
+
+    /**
+     * Get classname of currency used in basket
+     */
+    public function getCurrencyClassname(): string
+    {
+        return $this->currencyClassname;
+    }
+
+    /**
+     * Create amount object using the current basket currency
+     *
+     * @throws Exception If no item is loaded and currency is unknown
+     */
+    public function createCurrencyObject(string $value): Amount
+    {
+        if (!$currency = $this->getCurrencyClassname()) {
+            throw new Exception('Unable to create currency object, currency unknown.');
+        }
+
+        return new $currency($value);
     }
 
     /**
@@ -49,8 +87,8 @@ class ItemBasket implements \IteratorAggregate
      */
     public function getIterator(): \Traversable
     {
-        foreach ($this->getItems() as $item) {
-            yield $item;
+        foreach ($this->getItems() as $envelope) {
+            yield $envelope;
         }
     }
 
@@ -69,8 +107,8 @@ class ItemBasket implements \IteratorAggregate
     {
         return array_reduce(
             $this->getItems(),
-            function (int $carry, ItemEnvelope $item) {
-                return $carry + $item->getNrOfUnits();
+            function (int $carry, ItemEnvelope $envelope) {
+                return $carry + $envelope->getNrOfUnits();
             },
             0
         );
@@ -81,13 +119,7 @@ class ItemBasket implements \IteratorAggregate
      */
     public function getTotalUnitCost(): Amount
     {
-        return array_reduce(
-            $this->getItems(),
-            function (Amount $carry, ItemEnvelope $item) {
-                return $carry->add($item->getTotalUnitCost());
-            },
-            new Amount('0')
-        );
+        return $this->reduce('getTotalUnitCost');
     }
 
     /**
@@ -95,13 +127,7 @@ class ItemBasket implements \IteratorAggregate
      */
     public function getTotalVatCost(): Amount
     {
-        return array_reduce(
-            $this->getItems(),
-            function (Amount $carry, ItemEnvelope $item) {
-                return $carry->add($item->getTotalVatCost());
-            },
-            new Amount('0')
-        );
+        return $this->reduce('getTotalVatCost');
     }
 
     /**
@@ -121,17 +147,17 @@ class ItemBasket implements \IteratorAggregate
     {
         $rates = [];
 
-        foreach ($this as $item) {
-            if ($item->getVatRate()->isPositive()) {
-                $key = (string)$item->getVatRate();
+        foreach ($this as $envelope) {
+            if ($envelope->getVatRate()->isPositive()) {
+                $key = (string)$envelope->getVatRate();
 
                 if (!array_key_exists($key, $rates)) {
-                    $rates[$key] = new SimpleItem('', new Amount('0'), 1, $item->getVatRate());
+                    $rates[$key] = new SimpleItem('', $this->createCurrencyObject('0'), 1, $envelope->getVatRate());
                 }
 
                 $rates[$key] = new SimpleItem(
                     $rates[$key]->getBillingDescription(),
-                    $rates[$key]->getCostPerUnit()->add($item->getTotalUnitCost()),
+                    $rates[$key]->getCostPerUnit()->add($envelope->getTotalUnitCost()),
                     $rates[$key]->getNrOfUnits(),
                     $rates[$key]->getVatRate()
                 );
@@ -141,5 +167,19 @@ class ItemBasket implements \IteratorAggregate
         ksort($rates);
 
         return array_values($rates);
+    }
+
+    /**
+     * Reduce loaded items to single amount using envelope method
+     */
+    private function reduce(string $method): Amount
+    {
+        return array_reduce(
+            $this->getItems(),
+            function (Amount $carry, ItemEnvelope $envelope) use ($method) {
+                return $carry->add($envelope->$method());
+            },
+            $this->createCurrencyObject('0')
+        );
     }
 }

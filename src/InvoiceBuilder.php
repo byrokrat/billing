@@ -67,11 +67,6 @@ class InvoiceBuilder
     private $deduction;
 
     /**
-     * @var string 3-letter ISO 4217 code indicating currency
-     */
-    private $currency;
-
-    /**
      * Reset values at construct
      */
     public function __construct(OcrTools $ocrTools = null)
@@ -95,7 +90,6 @@ class InvoiceBuilder
         $this->billDate = null;
         $this->expiresAfter = 30;
         $this->deduction = null;
-        $this->currency = 'SEK';
         return $this;
     }
 
@@ -113,8 +107,7 @@ class InvoiceBuilder
             $this->itemBasket,
             $this->billDate ?: new \DateTime,
             $this->expiresAfter,
-            $this->deduction,
-            $this->currency
+            $this->deduction
         );
     }
 
@@ -257,15 +250,6 @@ class InvoiceBuilder
     public function setDeduction(Amount $deduction): self
     {
         $this->deduction = $deduction;
-        return $this;
-    }
-
-    /**
-     * Set the 3-letter ISO 4217 currency code indicating the invoice currency
-     */
-    public function setCurrency(string $currency): self
-    {
-        $this->currency = $currency;
         return $this;
     }
 }

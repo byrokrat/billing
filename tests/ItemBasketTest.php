@@ -5,72 +5,64 @@ declare(strict_types=1);
 namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
+use byrokrat\amount\Currency;
 
 class ItemBasketTest extends BaseTestCase
 {
-    public function testGerNrOfItems()
+    public function plainAmountMethodsProvider()
     {
-        $this->assertSame(
-            2,
-            (
-                new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock()),
-                    new ItemEnvelope($this->getBillableMock())
-                )
-            )->getNrOfItems()
-        );
+        return [
+            ['getNrOfItems', 2],
+            ['getNrOfUnits', 3],
+            ['getTotalUnitCost', new Amount('300')],
+            ['getTotalVatCost', new Amount('25')],
+            ['getTotalCost', new Amount('325')],
+        ];
     }
 
-    public function testGerNrOfUnits()
-    {
-        $this->assertSame(
-            3,
-            (
-                new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', null, 1)),
-                    new ItemEnvelope($this->getBillableMock('', null, 2))
-                )
-            )->getNrOfUnits()
-        );
-    }
-
-    public function testGetTotalUnitCost()
+    /**
+     * @dataProvider plainAmountMethodsProvider
+     */
+    public function testMethdsUsingPlainAmounts($method, $expected)
     {
         $this->assertEquals(
-            new Amount('300'),
+            $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1)),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2))
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, new Amount('.25'))),
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, new Amount('0')))
                 )
-            )->getTotalUnitCost()
+            )->$method()
         );
+
     }
 
-    public function testGetTotalVatCost()
+    public function currencyMethodsProvider()
     {
-        $this->assertEquals(
-            new Amount('50'),
-            (
-                new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1)),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1))
-                )
-            )->getTotalVatCost()
-        );
+        return [
+            ['getNrOfItems', 2],
+            ['getNrOfUnits', 3],
+            ['getTotalUnitCost', new Currency\SEK('300')],
+            ['getTotalVatCost', new Currency\SEK('75')],
+            ['getTotalCost', new Currency\SEK('375')],
+        ];
     }
 
-    public function testGetTotalCost()
+    /**
+     * @dataProvider currencyMethodsProvider
+     */
+    public function testMethdsUsingCurrencies($method, $expected)
     {
         $this->assertEquals(
-            new Amount('250'),
+            $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1)),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1))
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('.25'))),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 2, new Amount('.25')))
                 )
-            )->getTotalCost()
+            )->$method()
         );
+
     }
 
     public function testGetVatRates()
@@ -85,5 +77,33 @@ class ItemBasketTest extends BaseTestCase
             )->getVatRates(),
             'Second item has VAT 0 and should not be included'
         );
+    }
+
+    public function testGetCurrencyVatRates()
+    {
+        $this->assertInstanceOf(
+            Currency\SEK::CLASS,
+            (
+                new ItemBasket(
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('.25'))),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, new Amount('0')))
+                )
+            )->getVatRates()[0]->getCostPerUnit()
+        );
+    }
+
+    public function testExceptionOnInconsistentCurrencies()
+    {
+        $this->setExpectedException(Exception::CLASS);
+        new ItemBasket(
+            new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'))),
+            new ItemEnvelope($this->getBillableMock('', new Currency\EUR('100')))
+        );
+    }
+
+    public function testExceptioinOnUnknownCurrency()
+    {
+        $this->setExpectedException(Exception::CLASS);
+        (new ItemBasket)->createCurrencyObject('0');
     }
 }
