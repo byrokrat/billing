@@ -15,7 +15,7 @@ class InvoiceTest extends BaseTestCase
             $this->getMock('byrokrat\billing\Seller'),
             $this->getMock('byrokrat\billing\Buyer'),
             'message',
-            new Ocr('133'),
+            '133',
             $this->getItems(),
             new \DateTime('2014-01-01'),
             1,
@@ -109,7 +109,7 @@ class InvoiceTest extends BaseTestCase
 
     public function testGetOcr()
     {
-        $this->assertEquals(new Ocr('133'), $this->getInvoice()->getOcr());
+        $this->assertEquals('133', $this->getInvoice()->getOcr());
     }
 
     public function testGetMessage()

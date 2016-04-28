@@ -32,14 +32,19 @@ class InvoiceBuilder
     private $message;
 
     /**
-     * @var Ocr Payment reference number
+     * @var string Payment reference number
      */
     private $ocr;
 
     /**
-     * @var boolean Flag if ocr may be generated from serial
+     * @var bool Flag if ocr may be generated from serial
      */
     private $generateOcr;
+
+    /**
+     * @var OcrTools Tools for validating and creating ocr numbers
+     */
+    private $ocrTools;
 
     /**
      * @var ItemEnvelope[] List of charged items
@@ -69,8 +74,9 @@ class InvoiceBuilder
     /**
      * Reset values at construct
      */
-    public function __construct()
+    public function __construct(OcrTools $ocrTools = null)
     {
+        $this->ocrTools = $ocrTools ?: new OcrTools;
         $this->reset();
     }
 
@@ -83,7 +89,7 @@ class InvoiceBuilder
         $this->seller = null;
         $this->buyer = null;
         $this->message = '';
-        $this->ocr = null;
+        $this->ocr = '';
         $this->items = [];
         $this->generateOcr = false;
         $this->billDate = null;
@@ -190,8 +196,9 @@ class InvoiceBuilder
     /**
      * Set invoice reference number
      */
-    public function setOcr(Ocr $ocr): self
+    public function setOcr(string $ocr): self
     {
+        $this->ocrTools->validate($ocr);
         $this->ocr = $ocr;
         return $this;
     }
@@ -207,18 +214,14 @@ class InvoiceBuilder
 
     /**
      * Get invoice reference number
-     *
-     * @return Ocr|null Null if ocr is not set
      */
-    public function getOcr()
+    public function getOcr(): string
     {
-        if (isset($this->ocr)) {
-            return $this->ocr;
+        if (!$this->ocr && $this->generateOcr) {
+            return $this->ocrTools->create($this->getSerial());
         }
 
-        if ($this->generateOcr) {
-            return (new OcrFactory)->createOcr($this->getSerial());
-        }
+        return $this->ocr;
     }
 
     /**

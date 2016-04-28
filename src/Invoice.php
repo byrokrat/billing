@@ -32,7 +32,7 @@ class Invoice
     private $message;
 
     /**
-     * @var Ocr Payment reference number
+     * @var string Payment reference number
      */
     private $ocr;
 
@@ -68,7 +68,7 @@ class Invoice
      * @param Seller         $seller       Registered seller
      * @param Buyer          $buyer        Registered buyer
      * @param string         $message      Invoice message
-     * @param Ocr|null       $ocr          Payment reference number
+     * @param string         $ocr          Payment reference number
      * @param ItemEnvelope[] $items        Array of charged items
      * @param \DateTime|null $billDate     Date of invoice creation
      * @param integer        $expiresAfter Nr of days before invoice expires
@@ -80,7 +80,7 @@ class Invoice
         Seller $seller,
         Buyer $buyer,
         string $message = '',
-        Ocr $ocr = null,
+        string $ocr = '',
         array $items = array(),
         \DateTime $billDate = null,
         int $expiresAfter = 30,
@@ -137,12 +137,8 @@ class Invoice
 
     /**
      * Get invoice reference number
-     *
-     * Returns null if no ocr was specified
-     *
-     * @return Ocr|null
      */
-    public function getOcr()
+    public function getOcr(): string
     {
         return $this->ocr;
     }

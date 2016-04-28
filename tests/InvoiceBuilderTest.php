@@ -38,7 +38,7 @@ class InvoiceBuilderTest extends BaseTestCase
 
     public function testBuildInvoice()
     {
-        $ocr = new Ocr('232');
+        $ocr = '232';
         $item = new StandardItem('', 0, new Amount('0'));
         $date = new \DateTime();
         $deduction = new Amount('100');
@@ -71,15 +71,14 @@ class InvoiceBuilderTest extends BaseTestCase
 
     public function testGeneratingWithoutOcr()
     {
-        $this->assertNull(
+        $this->assertEmpty(
             $this->builder->buildInvoice()->getOcr()
         );
     }
 
     public function testGenerateOcr()
     {
-        $this->assertInstanceOf(
-            'byrokrat\billing\Ocr',
+        $this->assertNotEmpty(
             $this->builder->generateOcr()->buildInvoice()->getOcr()
         );
     }
