@@ -54,7 +54,7 @@ class Invoice
     private $deduction;
 
     /**
-     * Construct invoice
+     * Load values at construct
      *
      * @param string             $serial       Invoice serial number
      * @param AgentInterface     $seller       Registered seller

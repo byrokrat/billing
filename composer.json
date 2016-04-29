@@ -1,6 +1,6 @@
 {
     "name": "byrokrat/billing",
-    "description": "Data types for creating invoices",
+    "description": "Data types for creating and formatting invoices",
     "keywords": ["billing", "invoice", "OCR"],
     "homepage": "https://github.com/byrokrat/billing",
     "type": "library",
@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "php": ">=7",
+        "php": "^7.0",
         "byrokrat/amount": "^1.0",
         "byrokrat/checkdigit": "^1.0"
     }
