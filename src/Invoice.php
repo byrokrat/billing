@@ -59,7 +59,6 @@ class Invoice
      * @param string             $serial       Invoice serial number
      * @param AgentInterface     $seller       Registered seller
      * @param AgentInterface     $buyer        Registered buyer
-     * @param string             $message      Invoice message
      * @param string             $ocr          Payment reference number
      * @param ItemBasket         $itemBasket   Container for charged items
      * @param \DateTimeImmutable $billDate     Date of invoice creation
@@ -156,10 +155,6 @@ class Invoice
     public function getExpirationDate(): \DateTimeImmutable
     {
         return $this->billDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
-        $expireDate = clone $this->billDate;
-        $expireDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
-
-        return $expireDate;
     }
 
     /**

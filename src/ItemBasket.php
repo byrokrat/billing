@@ -141,32 +141,27 @@ class ItemBasket implements \IteratorAggregate
     /**
      * Get charged vat amounts for non-zero vat rates
      *
-     * @return Billable[]
+     * @return Amount[]
      */
     public function getVatRates(): array
     {
         $rates = [];
 
         foreach ($this as $envelope) {
-            if ($envelope->getVatRate() > 0) {
-                $key = (string)$envelope->getVatRate();
-
-                if (!array_key_exists($key, $rates)) {
-                    $rates[$key] = new Item('', $this->createCurrencyObject('0'), 1, $envelope->getVatRate());
-                }
-
-                $rates[$key] = new Item(
-                    $rates[$key]->getBillingDescription(),
-                    $rates[$key]->getCostPerUnit()->add($envelope->getTotalUnitCost()),
-                    $rates[$key]->getNrOfUnits(),
-                    $rates[$key]->getVatRate()
-                );
+            if ($envelope->getVatRate() <= 0) {
+                continue;
             }
+
+            if (!isset($rates[$envelope->getVatRate()])) {
+                $rates[$envelope->getVatRate()] = $this->createCurrencyObject('0');
+            }
+
+            $rates[$envelope->getVatRate()] = $rates[$envelope->getVatRate()]->add($envelope->getTotalVatCost());
         }
 
         ksort($rates);
 
-        return array_values($rates);
+        return $rates;
     }
 
     /**

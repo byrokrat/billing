@@ -57,8 +57,8 @@ Implementing your own billables and agents
 ------------------------------------------
 Billing uses an interface centered design:
 
-* [`Billable`](/src/Billable.php) represents a purchasable item
-* [`AgentInterface`](/src/AgentInterface.php) represents a selling or buying party
+* [`Billable`](/src/Billable.php) represents a purchasable item.
+* [`AgentInterface`](/src/AgentInterface.php) represents a selling or buying party.
 
 [`Item`](/src/Item.php) and [`Agent`](/src/Agent.php) offers simple implementations
 of these interfaces, but you may of course provide your own implementations and
@@ -108,7 +108,7 @@ getNrOfUnits(): int                         | Get number of units in basket (eac
 getTotalUnitCost(): [`Amount`][amount]      | Get total cost of all items (VAT excluded)
 getTotalVatCost(): [`Amount`][amount]       | Get total VAT cost for all items
 getTotalCost(): [`Amount`][amount]          | Get total cost of all items (VAT included)
-getVatRates(): [`Billable`][billable][]     | Get charged vat amounts for non-zero vat rates
+getVatRates(): [`Amount`][amount][]         | Get charged vat amounts for non-zero vat rates
 
 [billable]: /src/Billable.php
 [agentinterface]: /src/AgentInterface.php

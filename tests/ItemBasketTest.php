@@ -67,15 +67,23 @@ class ItemBasketTest extends BaseTestCase
 
     public function testGetVatRates()
     {
+        $rates = (
+            new ItemBasket(
+                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 0))
+            )
+        )->getVatRates();
+
         $this->assertCount(
             1,
-            (
-                new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 0))
-                )
-            )->getVatRates(),
+            $rates,
             'Second item has VAT 0 and should not be included'
+        );
+
+        $this->assertEquals(
+            new Amount('50'),
+            $rates[25]
         );
     }
 
@@ -88,7 +96,7 @@ class ItemBasketTest extends BaseTestCase
                     new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 25)),
                     new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 0))
                 )
-            )->getVatRates()[0]->getCostPerUnit()
+            )->getVatRates()[25]
         );
     }
 

@@ -36,7 +36,7 @@ class Item implements Billable
      *
      * Note that a VAT of 25% is represented as 25
      */
-    public function __construct(string $description, Amount $unitCost, int $units = 1, float $vat = 25)
+    public function __construct(string $description, Amount $unitCost, int $units = 1, float $vat = 25.0)
     {
         $this->description = $description;
         $this->unitCost = $unitCost;
