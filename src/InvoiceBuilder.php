@@ -11,35 +11,27 @@ use byrokrat\amount\Amount;
  */
 class InvoiceBuilder
 {
+    use AttributesTrait;
+
     /**
      * @var string Invoice serial number
      */
     private $serial;
 
     /**
-     * @var Seller Registered seller
+     * @var AgentInterface Registered seller
      */
     private $seller;
 
     /**
-     * @var Buyer Registered buyer
+     * @var AgentInterface Registered buyer
      */
     private $buyer;
-
-    /**
-     * @var string Message to buyer
-     */
-    private $message;
 
     /**
      * @var string Payment reference number
      */
     private $ocr;
-
-    /**
-     * @var bool Flag if ocr may be generated from serial
-     */
-    private $generateOcr;
 
     /**
      * @var OcrTools Tools for validating and creating ocr numbers
@@ -52,7 +44,7 @@ class InvoiceBuilder
     private $itemBasket;
 
     /**
-     * @var \DateTime Invoice creation date
+     * @var \DateTimeImmutable Invoice creation date
      */
     private $billDate;
 
@@ -83,13 +75,12 @@ class InvoiceBuilder
         $this->serial = null;
         $this->seller = null;
         $this->buyer = null;
-        $this->message = '';
         $this->ocr = '';
         $this->itemBasket = new ItemBasket;
-        $this->generateOcr = false;
         $this->billDate = null;
         $this->expiresAfter = 30;
         $this->deduction = null;
+        $this->clearAttributes();
         return $this;
     }
 
@@ -98,17 +89,22 @@ class InvoiceBuilder
      */
     public function buildInvoice(): Invoice
     {
-        return new Invoice(
+        $invoice = new Invoice(
             $this->getSerial(),
             $this->getSeller(),
             $this->getBuyer(),
-            $this->message,
-            $this->getOcr(),
+            $this->ocr,
             $this->itemBasket,
-            $this->billDate ?: new \DateTime,
+            $this->billDate ?: new \DateTimeImmutable,
             $this->expiresAfter,
             $this->deduction
         );
+
+        foreach ($this->getAttributes() as $key => $value) {
+            $invoice->setAttribute($key, $value);
+        }
+
+        return $invoice;
     }
 
     /**
@@ -136,7 +132,7 @@ class InvoiceBuilder
     /**
      * Set seller
      */
-    public function setSeller(Seller $seller): self
+    public function setSeller(AgentInterface $seller): self
     {
         $this->seller = $seller;
         return $this;
@@ -147,7 +143,7 @@ class InvoiceBuilder
      *
      * @throws Exception If seller is not set
      */
-    public function getSeller(): Seller
+    public function getSeller(): AgentInterface
     {
         if (isset($this->seller)) {
             return $this->seller;
@@ -158,7 +154,7 @@ class InvoiceBuilder
     /**
      * Set buyer
      */
-    public function setBuyer(Buyer $buyer): self
+    public function setBuyer(AgentInterface $buyer): self
     {
         $this->buyer = $buyer;
         return $this;
@@ -169,21 +165,12 @@ class InvoiceBuilder
      *
      * @throws Exception If buyer is not set
      */
-    public function getBuyer(): Buyer
+    public function getBuyer(): AgentInterface
     {
         if (isset($this->buyer)) {
             return $this->buyer;
         }
         throw new Exception("Unable to create Invoice: buyer not set");
-    }
-
-    /**
-     * Set invoice message
-     */
-    public function setMessage(string $message): self
-    {
-        $this->message = $message;
-        return $this;
     }
 
     /**
@@ -197,24 +184,12 @@ class InvoiceBuilder
     }
 
     /**
-     * Set if ocr may be generated from serial
+     * Generate invoice reference number from serial number
      */
-    public function generateOcr(bool $generateOcr = true): self
+    public function generateOcr(): self
     {
-        $this->generateOcr = $generateOcr;
+        $this->ocr = $this->ocrTools->create($this->getSerial());
         return $this;
-    }
-
-    /**
-     * Get invoice reference number
-     */
-    public function getOcr(): string
-    {
-        if (!$this->ocr && $this->generateOcr) {
-            return $this->ocrTools->create($this->getSerial());
-        }
-
-        return $this->ocr;
     }
 
     /**
@@ -229,7 +204,7 @@ class InvoiceBuilder
     /**
      * Set date of invoice creation
      */
-    public function setBillDate(\DateTime $date): self
+    public function setBillDate(\DateTimeImmutable $date): self
     {
         $this->billDate = $date;
         return $this;

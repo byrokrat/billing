@@ -6,13 +6,13 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class SimpleItemTest extends BaseTestCase
+class ItemTest extends BaseTestCase
 {
     public function testGetBillingDescription()
     {
         $this->assertEquals(
             'desc',
-            (new SimpleItem('desc', new Amount('0')))->getBillingDescription()
+            (new Item('desc', new Amount('0')))->getBillingDescription()
         );
     }
 
@@ -20,7 +20,7 @@ class SimpleItemTest extends BaseTestCase
     {
         $this->assertEquals(
             new Amount('100'),
-            (new SimpleItem('', new Amount('100')))->getCostPerUnit()
+            (new Item('', new Amount('100')))->getCostPerUnit()
         );
     }
 
@@ -28,7 +28,7 @@ class SimpleItemTest extends BaseTestCase
     {
         $this->assertEquals(
             2,
-            (new SimpleItem('', new Amount('0'), 2))->getNrOfUnits()
+            (new Item('', new Amount('0'), 2))->getNrOfUnits()
         );
     }
 
@@ -36,7 +36,7 @@ class SimpleItemTest extends BaseTestCase
     {
         $this->assertEquals(
             25,
-            (new SimpleItem('', new Amount('0')))->getVatRate()
+            (new Item('', new Amount('0')))->getVatRate()
         );
     }
 }

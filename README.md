@@ -20,11 +20,11 @@ Usage
 Create items to bill:
 
 ```php
-use byrokrat\billing\SimpleItem;
+use byrokrat\billing\Item;
 use byrokrat\amount\Currency\EUR;
 
 // 1 unit of a 100 EUR item with 25% VAT
-$item = new SimpleItem(
+$item = new Item(
     'Item description',
     new EUR('100'),
     1,
@@ -42,7 +42,6 @@ $invoice = (new InvoiceBuilder)
     ->setSerial('1')
     ->setSeller(new StandardActor('Company X'))
     ->setBuyer(new StandardActor('Mrs Y'))
-    ->setMessage('Pay in time or else!')
     ->generateOcr()
     ->addItem($item)
     ->buildInvoice();
@@ -60,30 +59,28 @@ echo $invoice->getInvoiceTotal();
 Billing uses an interface centered design:
 
 * [`Billable`](/src/Billable.php) represents a purchased item
-* [`Seller`](/src/Seller.php) represents the selling party
-* [`Buyer`](/src/Buyer.php) represents the buying party
+* [`AgentInterface`](/src/AgentInterface.php) represents selling/buying party
 
-[`SimpleItem`](/src/SimpleItem.php) and [`StandardActor`](/src/StandardActor.php)
+[`Item`](/src/Item.php) and [`Agent`](/src/Agent.php)
 offers simple implementations of these interfaces, but you may of course provide your
 own implementations and extend the interfaces as needed.
 
-### The invoice api
-
+API
+---
 [`Invoice`](/src/Invoice.php) defines the following api:
 
-Method signature    | returns                             | description
-:------------------ | :---------------------------------- | :------------------------------------------
-getSerial()         | string                              | Get invoice serial number
-getSeller()         | [`Seller`](/src/Seller.php)         | Get registered seller
-getBuyer()          | [`Buyer`](/src/Buyer.php)           | Get registered buyer
-getMessage()        | string                              | Get invoice message
-getOcr()            | string                              | Get invoice reference number
-getItems()          | [`ItemBasket`](/src/ItemBasket.php) | Get item basket
-getInvoiceTotal()   | Amount                              | Get charged amount (VAT included)
-getBillDate()       | DateTime                            | Get date of invoice creation
-getExpiresAfter()   | integer                             | Get number of days before invoice expires
-getExpirationDate() | DateTime                            | Get date when invoice expires
-getDeduction()      | Amount                              | Get deducted prepaid amound
+Method signature                                                  | description
+:---------------------------------------------------------------- | :----------------------------------------
+getSerial(): string                                               | Get invoice serial number
+getSeller(): [`AgentInterface`](/src/AgentInterface.php)          | Get registered seller
+getBuyer(): [`AgentInterface`](/src/AgentInterface.php)           | Get registered buyer
+getOcr(): string                                                  | Get invoice reference number
+getItems(): [`ItemBasket`](/src/ItemBasket.php)                   | Get item basket
+getInvoiceTotal(): [`Amount`](https://github.com/byrokrat/amount) | Get charged amount (VAT included)
+getBillDate(): DateTimeImmutable                                  | Get date of invoice creation
+getExpiresAfter(): int                                            | Get number of days before invoice expires
+getExpirationDate(): DateTimeImmutable                            | Get date when invoice expires
+getDeduction(): [`Amount`](https://github.com/byrokrat/amount)    | Get deducted prepaid amound
 
 Credits
 -------

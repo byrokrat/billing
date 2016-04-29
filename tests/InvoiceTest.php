@@ -13,12 +13,11 @@ class InvoiceTest extends BaseTestCase
     {
         return new Invoice(
             '1',
-            $this->getMock(Seller::CLASS),
-            $this->getMock(Buyer::CLASS),
-            'message',
+            $this->getMock(AgentInterface::CLASS),
+            $this->getMock(AgentInterface::CLASS),
             '133',
             $this->getMock(ItemBasket::CLASS),
-            new \DateTime('2014-01-01'),
+            new \DateTimeImmutable('2014-01-01'),
             1,
             new Amount('100')
         );
@@ -31,9 +30,8 @@ class InvoiceTest extends BaseTestCase
             (
                 new Invoice(
                     '',
-                    $this->getMock(Seller::CLASS),
-                    $this->getMock(Buyer::CLASS),
-                    '',
+                    $this->getMock(AgentInterface::CLASS),
+                    $this->getMock(AgentInterface::CLASS),
                     '',
                     new ItemBasket(
                         new ItemEnvelope(
@@ -59,9 +57,8 @@ class InvoiceTest extends BaseTestCase
             (
                 new Invoice(
                     '',
-                    $this->getMock(Seller::CLASS),
-                    $this->getMock(Buyer::CLASS),
-                    '',
+                    $this->getMock(AgentInterface::CLASS),
+                    $this->getMock(AgentInterface::CLASS),
                     '',
                     new ItemBasket(
                         new ItemEnvelope(
@@ -80,9 +77,8 @@ class InvoiceTest extends BaseTestCase
         (
             new Invoice(
                 '',
-                $this->getMock(Seller::CLASS),
-                $this->getMock(Buyer::CLASS),
-                '',
+                $this->getMock(AgentInterface::CLASS),
+                $this->getMock(AgentInterface::CLASS),
                 '',
                 new ItemBasket(
                     new ItemEnvelope(
@@ -104,7 +100,7 @@ class InvoiceTest extends BaseTestCase
     public function testGetSeller()
     {
         $this->assertInstanceOf(
-            Seller::CLASS,
+            AgentInterface::CLASS,
             $this->getInvoice()->getSeller()
         );
     }
@@ -112,14 +108,36 @@ class InvoiceTest extends BaseTestCase
     public function testGetBuyer()
     {
         $this->assertInstanceOf(
-            Buyer::CLASS,
+            AgentInterface::CLASS,
             $this->getInvoice()->getBuyer()
         );
     }
 
-    public function testGetBillDate()
+    public function testDates()
     {
-        $this->assertEquals(new \DateTime('2014-01-01'), $this->getInvoice()->getBillDate());
+        $this->assertEquals(
+            new \DateTimeImmutable('2014-01-01'),
+            $this->getInvoice()->getBillDate(),
+            'Bill date should be set to 2014-01-01'
+        );
+
+        $this->assertEquals(
+            1,
+            $this->getInvoice()->getExpiresAfter(),
+            'Expires after should be set to one day'
+        );
+
+        $this->assertEquals(
+            new \DateTimeImmutable('2014-01-02'),
+            $this->getInvoice()->getExpirationDate(),
+            'Expiration date should then be one day after bill date'
+        );
+
+        $this->assertEquals(
+            new \DateTimeImmutable('2014-01-01'),
+            $this->getInvoice()->getBillDate(),
+            'Calculating expiration date should not affect bill date'
+        );
     }
 
     public function testGetOcr()
@@ -127,23 +145,27 @@ class InvoiceTest extends BaseTestCase
         $this->assertEquals('133', $this->getInvoice()->getOcr());
     }
 
-    public function testGetMessage()
-    {
-        $this->assertEquals('message', $this->getInvoice()->getMessage());
-    }
-
-    public function testGetExpiresAfter()
-    {
-        $this->assertEquals(1, $this->getInvoice()->getExpiresAfter());
-    }
-
-    public function testGetExpirationDate()
-    {
-        $this->assertEquals(new \DateTime('2014-01-02'), $this->getInvoice()->getExpirationDate());
-    }
-
     public function testGetDeduction()
     {
         $this->assertEquals(new Amount('100'), $this->getInvoice()->getDeduction());
+    }
+
+    public function testAttributes()
+    {
+        $invoice = $this->getInvoice();
+
+        $invoice->setAttribute('message', 'foo');
+        $this->assertSame('foo', $invoice->getAttribute('message'));
+
+        $this->assertSame('bar', $invoice->getAttribute('this-is-not-set', 'bar'));
+
+        $this->assertSame(
+            ['message' => 'foo'],
+            $invoice->getAttributes()
+        );
+
+        $invoice->clearAttributes();
+
+        $this->assertEmpty($invoice->getAttributes());
     }
 }

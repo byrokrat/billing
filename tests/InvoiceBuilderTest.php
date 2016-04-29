@@ -14,8 +14,8 @@ class InvoiceBuilderTest extends BaseTestCase
     {
         $this->builder = (new InvoiceBuilder)
             ->setSerial('1')
-            ->setSeller($this->getMock('byrokrat\billing\Seller'))
-            ->setBuyer($this->getMock('byrokrat\billing\Buyer'));
+            ->setSeller($this->getMock(AgentInterface::CLASS))
+            ->setBuyer($this->getMock(AgentInterface::CLASS));
     }
 
     public function testExceptionWhenSerialNotSet()
@@ -40,11 +40,10 @@ class InvoiceBuilderTest extends BaseTestCase
     {
         $ocr = '232';
         $item = $this->getBillableMock('', new Amount('0'));
-        $date = new \DateTime();
+        $date = new \DateTimeImmutable();
         $deduction = new Amount('100');
 
         $invoice = $this->builder
-            ->setMessage('message')
             ->setOcr($ocr)
             ->addItem($item)
             ->setBillDate($date)
@@ -52,7 +51,6 @@ class InvoiceBuilderTest extends BaseTestCase
             ->setDeduction($deduction)
             ->buildInvoice();
 
-        $this->assertSame('message', $invoice->getMessage());
         $this->assertSame($ocr, $invoice->getOcr());
         $this->assertInstanceOf(ItemBasket::CLASS, $invoice->getItems());
         $this->assertSame($date, $invoice->getBillDate());
@@ -62,7 +60,7 @@ class InvoiceBuilderTest extends BaseTestCase
     public function testGnerateWithoutBillDate()
     {
         $this->assertInstanceOf(
-            'DateTime',
+            'DateTimeImmutable',
             $this->builder->buildInvoice()->getBillDate()
         );
     }
@@ -78,6 +76,14 @@ class InvoiceBuilderTest extends BaseTestCase
     {
         $this->assertNotEmpty(
             $this->builder->generateOcr()->buildInvoice()->getOcr()
+        );
+    }
+
+    public function testAttributes()
+    {
+        $this->assertSame(
+            'bar',
+            $this->builder->setAttribute('foo', 'bar')->buildInvoice()->getAttribute('foo')
         );
     }
 }

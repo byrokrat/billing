@@ -11,25 +11,22 @@ use byrokrat\amount\Amount;
  */
 class Invoice
 {
+    use AttributesTrait;
+
     /**
      * @var string Invoice serial number
      */
     private $serial;
 
     /**
-     * @var Seller Registered seller
+     * @var AgentInterface Registered seller
      */
     private $seller;
 
     /**
-     * @var Buyer Registered buyer
+     * @var AgentInterface Registered buyer
      */
     private $buyer;
-
-    /**
-     * @var string Message to buyer
-     */
-    private $message;
 
     /**
      * @var string Payment reference number
@@ -42,7 +39,7 @@ class Invoice
     private $itemBasket = [];
 
     /**
-     * @var \DateTime Creation date
+     * @var \DateTimeImmutable Creation date
      */
     private $billDate;
 
@@ -59,24 +56,23 @@ class Invoice
     /**
      * Construct invoice
      *
-     * @param string     $serial       Invoice serial number
-     * @param Seller     $seller       Registered seller
-     * @param Buyer      $buyer        Registered buyer
-     * @param string     $message      Invoice message
-     * @param string     $ocr          Payment reference number
-     * @param ItemBasket $itemBasket   Container for charged items
-     * @param \DateTime  $billDate     Date of invoice creation
-     * @param integer    $expiresAfter Nr of days before invoice expires
-     * @param Amount     $deduction    Prepaid amound to deduct
+     * @param string             $serial       Invoice serial number
+     * @param AgentInterface     $seller       Registered seller
+     * @param AgentInterface     $buyer        Registered buyer
+     * @param string             $message      Invoice message
+     * @param string             $ocr          Payment reference number
+     * @param ItemBasket         $itemBasket   Container for charged items
+     * @param \DateTimeImmutable $billDate     Date of invoice creation
+     * @param integer            $expiresAfter Nr of days before invoice expires
+     * @param Amount             $deduction    Prepaid amound to deduct
      */
     public function __construct(
         string $serial,
-        Seller $seller,
-        Buyer $buyer,
-        string $message = '',
+        AgentInterface $seller,
+        AgentInterface $buyer,
         string $ocr = '',
         ItemBasket $itemBasket = null,
-        \DateTime $billDate = null,
+        \DateTimeImmutable $billDate = null,
         int $expiresAfter = 30,
         Amount $deduction = null
     ) {
@@ -85,8 +81,7 @@ class Invoice
         $this->buyer = $buyer;
         $this->itemBasket = $itemBasket;
         $this->ocr = $ocr;
-        $this->message = $message;
-        $this->billDate = $billDate ?: new \DateTime;
+        $this->billDate = $billDate ?: new \DateTimeImmutable;
         $this->expiresAfter = $expiresAfter;
         $this->deduction = $deduction;
     }
@@ -102,7 +97,7 @@ class Invoice
     /**
      * Get seller
      */
-    public function getSeller(): Seller
+    public function getSeller(): AgentInterface
     {
         return $this->seller;
     }
@@ -110,17 +105,9 @@ class Invoice
     /**
      * Get buyer
      */
-    public function getBuyer(): Buyer
+    public function getBuyer(): AgentInterface
     {
         return $this->buyer;
-    }
-
-    /**
-     * Get invoice message
-     */
-    public function getMessage(): string
-    {
-        return $this->message;
     }
 
     /**
@@ -150,7 +137,7 @@ class Invoice
     /**
      * Get date of invoice creation
      */
-    public function getBillDate(): \DateTime
+    public function getBillDate(): \DateTimeImmutable
     {
         return $this->billDate;
     }
@@ -166,8 +153,9 @@ class Invoice
     /**
      * Get date when invoice expires
      */
-    public function getExpirationDate(): \DateTime
+    public function getExpirationDate(): \DateTimeImmutable
     {
+        return $this->billDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
         $expireDate = clone $this->billDate;
         $expireDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
 

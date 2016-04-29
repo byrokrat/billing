@@ -9,7 +9,7 @@ use byrokrat\amount\Amount;
 /**
  * Basic billable implementation
  */
-class SimpleItem implements Billable
+class Item implements Billable
 {
     /**
      * @var string

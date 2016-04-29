@@ -152,10 +152,10 @@ class ItemBasket implements \IteratorAggregate
                 $key = (string)$envelope->getVatRate();
 
                 if (!array_key_exists($key, $rates)) {
-                    $rates[$key] = new SimpleItem('', $this->createCurrencyObject('0'), 1, $envelope->getVatRate());
+                    $rates[$key] = new Item('', $this->createCurrencyObject('0'), 1, $envelope->getVatRate());
                 }
 
-                $rates[$key] = new SimpleItem(
+                $rates[$key] = new Item(
                     $rates[$key]->getBillingDescription(),
                     $rates[$key]->getCostPerUnit()->add($envelope->getTotalUnitCost()),
                     $rates[$key]->getNrOfUnits(),
