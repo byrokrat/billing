@@ -19,6 +19,7 @@ Usage
 -----
 Create items to bill:
 
+<!-- @expectNothing -->
 ```php
 use byrokrat\billing\Item;
 use byrokrat\amount\Currency\EUR;
@@ -34,6 +35,7 @@ $item = new Item(
 
 Invoices are created by using the [`InvoiceBuilder`](/src/InvoiceBuilder.php):
 
+<!-- @expectNothing -->
 ```php
 namespace byrokrat\billing;
 
@@ -48,6 +50,7 @@ $invoice = (new InvoiceBuilder)
 
 [`Invoice`](/src/Invoice.php) represents the actual invoice:
 
+<!-- @expectNothing -->
 ```php
 echo $invoice->getInvoiceTotal();
 // prints 125 (100 EUR plus 25% VAT)
