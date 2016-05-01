@@ -51,6 +51,8 @@ $invoice = (new InvoiceBuilder)
 ```php
 echo $invoice->getInvoiceTotal();
 // prints 125 (100 EUR plus 25% VAT)
+
+echo (new Formatter\AsciiFormatter)->format($invoice);
 ```
 
 Implementing your own billables and agents
@@ -68,8 +70,8 @@ API
 ---
 ### [`InvoiceBuilder`](/src/InvoiceBuilder.php)
 
-Method signature                                         | description
-:------------------------------------------------------- | :----------------------------------------
+Method signature                                            | description
+:---------------------------------------------------------- | :----------------------------------------
 setSerial(string $serial): self                             | Set invoice serial number
 setSeller([`AgentInterface`][agentinterface] $seller): self | Set seller
 setBuyer([`AgentInterface`][agentinterface] $buyer): self   | Set buyer
@@ -79,6 +81,7 @@ addItem([`Billable`][billable] $billable): self             | Add billable to in
 setBillDate([`DateTimeImmutable`][datetime] $date): self    | Set date of invoice creation
 setExpiresAfter(int $nrOfDays): self                        | Set number of days before invoice expires
 setDeduction([`Amount`][amount] $deduction): self           | Set deduction (amount prepaid)
+setAttribute(string $key, $value): self                     | Set attribute defined by key
 buildInvoice(): [`Invoice`](/src/Invoice.php)               | Build invoice
 
 ### [`Invoice`](/src/Invoice.php)
@@ -102,13 +105,13 @@ getAttributes(): array                               | Get all loaded attributes
 
 Method signature                            | description
 :------------------------------------------ | :-------------------------------------------------------------------
-getIterator(): [`Traversable`][traversable] | Implements the IteratorAggregate interface
+getIterator(): [`Traversable`][traversable] | Iterate over [`ItemEnvelope`](/src/ItemEnvelope.php) objects
 getNrOfItems(): int                         | Get number of items in basket
 getNrOfUnits(): int                         | Get number of units in basket (each item may contain multiple units)
 getTotalUnitCost(): [`Amount`][amount]      | Get total cost of all items (VAT excluded)
 getTotalVatCost(): [`Amount`][amount]       | Get total VAT cost for all items
 getTotalCost(): [`Amount`][amount]          | Get total cost of all items (VAT included)
-getVatRates(): [`Amount`][amount][]         | Get charged vat amounts for non-zero vat rates
+getVatRates(): [`Amount[]`][amount]         | Get charged vat amounts for non-zero vat rates
 
 [billable]: /src/Billable.php
 [agentinterface]: /src/AgentInterface.php
