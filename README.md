@@ -1,5 +1,5 @@
-Billing
-=======
+Byrokrat.Billing
+================
 
 [![Packagist Version](https://img.shields.io/packagist/v/byrokrat/billing.svg?style=flat-square)](https://packagist.org/packages/byrokrat/billing)
 [![Build Status](https://img.shields.io/travis/byrokrat/billing/master.svg?style=flat-square)](https://travis-ci.org/byrokrat/billing)
@@ -12,22 +12,11 @@ Data types for creating and formatting invoices.
 Installation
 ------------
 ```shell
-composer require byrokrat/billing
+composer require byrokrat/billing:^1.0
 ```
 
 Usage
 -----
-Create items to bill:
-
-<!-- @expectNothing -->
-```php
-use byrokrat\billing\Item;
-use byrokrat\amount\Currency\EUR;
-
-// 1 unit of a 100 EUR item with 25% VAT
-$item = new Item('Description', new EUR('100'), 1, .25);
-```
-
 [`Invoices`][invoice] are created using the [`InvoiceBuilder`][invoicebuilder]:
 
 <!-- @expectOutput 125.00 -->
@@ -36,12 +25,15 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Currency\EUR;
 
+// 1 unit of a 100 EUR item with 25% VAT
+$item = new Item('Description', new EUR('100'), 1, .25);
+
 $invoice = (new InvoiceBuilder)
     ->setSerial('1')
     ->setSeller(new Agent('Company X'))
     ->setBuyer(new Agent('Mrs Y'))
     ->generateOcr()
-    ->addItem(new Item('Description', new EUR('100'), 1, .25))
+    ->addItem($item)
     ->setAttribute('message', 'custom invoice message')
     ->buildInvoice();
 
@@ -49,8 +41,8 @@ $invoice = (new InvoiceBuilder)
 echo $invoice->getInvoiceTotal();
 ```
 
-Implementing your own billables and agents
-------------------------------------------
+### Implementing your own billables and agents
+
 Billing uses an interface centered design:
 
 * [`Billable`][billable] represents a purchasable item.
