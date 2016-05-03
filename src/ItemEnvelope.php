@@ -45,7 +45,7 @@ class ItemEnvelope implements Billable
      */
     public function getTotalVatCost(): Amount
     {
-        return $this->getTotalUnitCost()->multiplyWith($this->getVatRate() / 100);
+        return $this->getTotalUnitCost()->multiplyWith($this->getVatRate());
     }
 
     /**

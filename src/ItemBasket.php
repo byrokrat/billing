@@ -152,15 +152,22 @@ class ItemBasket implements \IteratorAggregate
                 continue;
             }
 
-            if (!isset($rates[$envelope->getVatRate()])) {
-                $rates[$envelope->getVatRate()] = $this->createCurrencyObject('0');
+            $key = (string)$envelope->getVatRate();
+
+            if (!isset($rates[$key])) {
+                $rates[$key] = [
+                    'unit_total' => $this->createCurrencyObject('0'),
+                    'vat_total' => $this->createCurrencyObject('0')
+                ];
             }
 
-            $rates[$envelope->getVatRate()] = $rates[$envelope->getVatRate()]->add($envelope->getTotalVatCost());
+            $rates[$key] = [
+                'unit_total' => $rates[$key]['unit_total']->add($envelope->getTotalUnitCost()),
+                'vat_total' => $rates[$key]['vat_total']->add($envelope->getTotalVatCost())
+            ];
         }
 
         ksort($rates);
-
         return $rates;
     }
 

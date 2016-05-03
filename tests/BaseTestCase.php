@@ -8,7 +8,7 @@ use byrokrat\amount\Amount;
 
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
-    protected function getBillableMock($desc = '', Amount $cost = null, $units = 1, float $vat = 25)
+    protected function getBillableMock($desc = '', Amount $cost = null, $units = 1, float $vat = .25)
     {
         $billable = $this->prophesize(Billable::CLASS);
         $billable->getBillingDescription()->willReturn($desc);

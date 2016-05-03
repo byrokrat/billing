@@ -29,7 +29,7 @@ class ItemBasketTest extends BaseTestCase
             $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, .25)),
                     new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, 0))
                 )
             )->$method()
@@ -57,8 +57,8 @@ class ItemBasketTest extends BaseTestCase
             $expected,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 25)),
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 2, 25))
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, .25)),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 2, .25))
                 )
             )->$method()
         );
@@ -69,8 +69,8 @@ class ItemBasketTest extends BaseTestCase
     {
         $rates = (
             new ItemBasket(
-                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
-                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 25)),
+                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, .25)),
+                new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, .25)),
                 new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, 0))
             )
         )->getVatRates();
@@ -83,7 +83,12 @@ class ItemBasketTest extends BaseTestCase
 
         $this->assertEquals(
             new Amount('50'),
-            $rates[25]
+            $rates['0.25']['vat_total']
+        );
+
+        $this->assertEquals(
+            new Amount('200'),
+            $rates['0.25']['unit_total']
         );
     }
 
@@ -93,10 +98,10 @@ class ItemBasketTest extends BaseTestCase
             Currency\SEK::CLASS,
             (
                 new ItemBasket(
-                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 25)),
+                    new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, .25)),
                     new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'), 1, 0))
                 )
-            )->getVatRates()[25]
+            )->getVatRates()['0.25']['vat_total']
         );
     }
 
