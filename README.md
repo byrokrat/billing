@@ -105,7 +105,7 @@ getNrOfUnits(): int                         | Get number of units in basket (eac
 getTotalUnitCost(): [`Amount`][amount]      | Get total cost of all items (VAT excluded)
 getTotalVatCost(): [`Amount`][amount]       | Get total VAT cost for all items
 getTotalCost(): [`Amount`][amount]          | Get total cost of all items (VAT included)
-getVatRates(): [`Amount[]`][amount]         | Get charged vat amounts for non-zero vat rates
+getVatRates(): array                        | Get unit and vat totals for non-zero vat rates
 
 [invoicebuilder]: /src/InvoiceBuilder.php
 [invoice]: /src/Invoice.php

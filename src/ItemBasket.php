@@ -139,9 +139,9 @@ class ItemBasket implements \IteratorAggregate
     }
 
     /**
-     * Get charged vat amounts for non-zero vat rates
+     * Get unit and vat totals for non-zero vat rates
      *
-     * @return Amount[]
+     * @return array
      */
     public function getVatRates(): array
     {
