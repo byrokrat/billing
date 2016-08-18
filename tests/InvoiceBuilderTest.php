@@ -14,8 +14,8 @@ class InvoiceBuilderTest extends BaseTestCase
     {
         $this->builder = (new InvoiceBuilder)
             ->setSerial('1')
-            ->setSeller($this->getMock(AgentInterface::CLASS))
-            ->setBuyer($this->getMock(AgentInterface::CLASS));
+            ->setSeller($this->createMock(AgentInterface::CLASS))
+            ->setBuyer($this->createMock(AgentInterface::CLASS));
     }
 
     public function testExceptionWhenSerialNotSet()

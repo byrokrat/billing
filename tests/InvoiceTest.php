@@ -13,10 +13,10 @@ class InvoiceTest extends BaseTestCase
     {
         return new Invoice(
             '1',
-            $this->getMock(AgentInterface::CLASS),
-            $this->getMock(AgentInterface::CLASS),
+            $this->createMock(AgentInterface::CLASS),
+            $this->createMock(AgentInterface::CLASS),
             '133',
-            $this->getMock(ItemBasket::CLASS),
+            $this->createMock(ItemBasket::CLASS),
             new \DateTimeImmutable('2014-01-01'),
             1,
             new Amount('100')
@@ -30,8 +30,8 @@ class InvoiceTest extends BaseTestCase
             (
                 new Invoice(
                     '',
-                    $this->getMock(AgentInterface::CLASS),
-                    $this->getMock(AgentInterface::CLASS),
+                    $this->createMock(AgentInterface::CLASS),
+                    $this->createMock(AgentInterface::CLASS),
                     '',
                     new ItemBasket(
                         new ItemEnvelope(
@@ -57,8 +57,8 @@ class InvoiceTest extends BaseTestCase
             (
                 new Invoice(
                     '',
-                    $this->getMock(AgentInterface::CLASS),
-                    $this->getMock(AgentInterface::CLASS),
+                    $this->createMock(AgentInterface::CLASS),
+                    $this->createMock(AgentInterface::CLASS),
                     '',
                     new ItemBasket(
                         new ItemEnvelope(
@@ -77,8 +77,8 @@ class InvoiceTest extends BaseTestCase
         (
             new Invoice(
                 '',
-                $this->getMock(AgentInterface::CLASS),
-                $this->getMock(AgentInterface::CLASS),
+                $this->createMock(AgentInterface::CLASS),
+                $this->createMock(AgentInterface::CLASS),
                 '',
                 new ItemBasket(
                     new ItemEnvelope(
