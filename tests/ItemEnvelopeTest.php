@@ -6,7 +6,7 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class ItemEnvelopeTest extends BaseTestCase
+class ItemEnvelopeTest extends TestCase
 {
     public function testGetDescription()
     {

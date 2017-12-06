@@ -7,7 +7,7 @@ namespace byrokrat\billing;
 use byrokrat\amount\Amount;
 use byrokrat\amount\Currency;
 
-class InvoiceTest extends BaseTestCase
+class InvoiceTest extends TestCase
 {
     private function getInvoice()
     {
@@ -73,7 +73,7 @@ class InvoiceTest extends BaseTestCase
 
     public function testExceptionUsingInvalidDeductionCurrency()
     {
-        $this->setExpectedException('byrokrat\amount\InvalidArgumentException');
+        $this->expectException('byrokrat\amount\InvalidArgumentException');
         (
             new Invoice(
                 '',

@@ -6,7 +6,7 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected function getBillableMock($desc = '', Amount $cost = null, $units = 1, float $vat = .25)
     {

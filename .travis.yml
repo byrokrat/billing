@@ -3,11 +3,12 @@ sudo: false
 language: php
 
 php:
+  - 7.2
   - 7.1
   - 7.0
 
 install:
-    - composer require hanneskod/readme-tester:dev-master
+    - composer require hanneskod/readme-tester:1.0-beta.3
 
 script:
   - if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then phpunit --coverage-clover=coverage.clover ; fi

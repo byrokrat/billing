@@ -6,7 +6,7 @@ namespace byrokrat\billing;
 
 use byrokrat\amount\Amount;
 
-class InvoiceBuilderTest extends BaseTestCase
+class InvoiceBuilderTest extends TestCase
 {
     private $builder;
 
@@ -20,19 +20,19 @@ class InvoiceBuilderTest extends BaseTestCase
 
     public function testExceptionWhenSerialNotSet()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new InvoiceBuilder)->getSerial();
     }
 
     public function testExceptionWhenSellerNotSet()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new InvoiceBuilder)->getSeller();
     }
 
     public function testExceptionWhenBuyerNotSet()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new InvoiceBuilder)->getBuyer();
     }
 

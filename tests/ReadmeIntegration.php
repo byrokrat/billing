@@ -9,7 +9,7 @@ use hanneskod\readmetester\PHPUnit\AssertReadme;
 /**
  * @coversNothing
  */
-class ReadmeIntegration extends \PHPUnit_Framework_TestCase
+class ReadmeIntegration extends \PHPUnit\Framework\TestCase
 {
     public function testReadmeIntegrationTests()
     {

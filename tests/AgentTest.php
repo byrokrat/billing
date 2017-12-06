@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace byrokrat\billing;
 
-class AgentTest extends BaseTestCase
+class AgentTest extends TestCase
 {
     public function testName()
     {

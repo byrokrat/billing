@@ -7,7 +7,7 @@ namespace byrokrat\billing;
 use byrokrat\amount\Amount;
 use byrokrat\amount\Currency;
 
-class ItemBasketTest extends BaseTestCase
+class ItemBasketTest extends TestCase
 {
     public function plainAmountMethodsProvider()
     {
@@ -107,7 +107,7 @@ class ItemBasketTest extends BaseTestCase
 
     public function testExceptionOnInconsistentCurrencies()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         new ItemBasket(
             new ItemEnvelope($this->getBillableMock('', new Currency\SEK('100'))),
             new ItemEnvelope($this->getBillableMock('', new Currency\EUR('100')))
@@ -116,7 +116,7 @@ class ItemBasketTest extends BaseTestCase
 
     public function testExceptioinOnUnknownCurrency()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new ItemBasket)->createCurrencyObject('0');
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace byrokrat\billing;
 
-class OcrToolsTest extends BaseTestCase
+class OcrToolsTest extends TestCase
 {
     public function testCreateOcr()
     {
@@ -16,13 +16,13 @@ class OcrToolsTest extends BaseTestCase
 
     public function testExceptionOnCreateWithInvalidLength()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new OcrTools)->create('123456789012345678901234');
     }
 
     public function testExceptionOnCreateWithNonNumericValue()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new OcrTools)->create('123L');
     }
 
@@ -47,19 +47,19 @@ class OcrToolsTest extends BaseTestCase
      */
     public function testExceptionOnInvalidOcrStructure($ocr)
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new OcrTools)->validate($ocr);
     }
 
     public function testExceptionOnInvalidOcrLengthDigit()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new OcrTools)->validate('12345602');
     }
 
     public function testExceptionOnInvalidOcrCheckDigit()
     {
-        $this->setExpectedException(Exception::CLASS);
+        $this->expectException(Exception::CLASS);
         (new OcrTools)->validate('12345680');
     }
 }
