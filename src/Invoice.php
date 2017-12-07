@@ -36,10 +36,10 @@ class Invoice
     /**
      * @var ItemBasket Container for charged items
      */
-    private $itemBasket = [];
+    private $itemBasket;
 
     /**
-     * @var \DateTimeImmutable Creation date
+     * @var \DateTimeInterface Creation date
      */
     private $billDate;
 
@@ -49,7 +49,7 @@ class Invoice
     private $expiresAfter;
 
     /**
-     * @var Amount Prepaid amound to deduct
+     * @var ?Amount Prepaid amound to deduct
      */
     private $deduction;
 
@@ -61,7 +61,7 @@ class Invoice
      * @param AgentInterface     $buyer        Registered buyer
      * @param string             $ocr          Payment reference number
      * @param ItemBasket         $itemBasket   Container for charged items
-     * @param \DateTimeImmutable $billDate     Date of invoice creation
+     * @param \DateTimeInterface $billDate     Date of invoice creation
      * @param integer            $expiresAfter Nr of days before invoice expires
      * @param Amount             $deduction    Prepaid amound to deduct
      */
@@ -69,18 +69,18 @@ class Invoice
         string $serial,
         AgentInterface $seller,
         AgentInterface $buyer,
-        string $ocr = '',
-        ItemBasket $itemBasket = null,
-        \DateTimeImmutable $billDate = null,
-        int $expiresAfter = 30,
-        Amount $deduction = null
+        string $ocr,
+        ItemBasket $itemBasket,
+        \DateTimeInterface $billDate,
+        int $expiresAfter,
+        ?Amount $deduction = null
     ) {
         $this->serial = $serial;
         $this->seller = $seller;
         $this->buyer = $buyer;
-        $this->itemBasket = $itemBasket;
         $this->ocr = $ocr;
-        $this->billDate = $billDate ?: new \DateTimeImmutable;
+        $this->itemBasket = $itemBasket;
+        $this->billDate = $billDate;
         $this->expiresAfter = $expiresAfter;
         $this->deduction = $deduction;
     }
@@ -136,7 +136,7 @@ class Invoice
     /**
      * Get date of invoice creation
      */
-    public function getBillDate(): \DateTimeImmutable
+    public function getBillDate(): \DateTimeInterface
     {
         return $this->billDate;
     }
@@ -152,9 +152,11 @@ class Invoice
     /**
      * Get date when invoice expires
      */
-    public function getExpirationDate(): \DateTimeImmutable
+    public function getExpirationDate(): \DateTimeInterface
     {
-        return $this->billDate->add(new \DateInterval("P{$this->getExpiresAfter()}D"));
+        return new \DateTimeImmutable(
+            '@' . ($this->billDate->getTimestamp() + $this->getExpiresAfter() * 24 * 60 * 60)
+        );
     }
 
     /**

@@ -26,7 +26,7 @@ class OcrTools
      *
      * @throws Exception If ocr is not valid, including check and length digits
      */
-    public function validate(string $ocr): bool
+    public function validateOcr(string $ocr): string
     {
         if (!ctype_digit($ocr) || strlen($ocr) > 25 || strlen($ocr) < 2) {
             throw new Exception("Number must be numeric and contain between 2 and 25 digits");
@@ -40,7 +40,7 @@ class OcrTools
             throw new Exception("Invalid check digit");
         }
 
-        return true;
+        return $ocr;
     }
 
     /**
@@ -48,7 +48,7 @@ class OcrTools
      *
      * @throws Exception If number is non-numeric or longer than 23 characters
      */
-    public function create(string $number): string
+    public function createOcr(string $number): string
     {
         if (!ctype_digit($number) || strlen($number) > 23) {
             throw new Exception("Number must be numeric and contain a maximum of 23 digits");

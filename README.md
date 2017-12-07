@@ -1,5 +1,4 @@
-Byrokrat.Billing
-================
+# Billing
 
 [![Packagist Version](https://img.shields.io/packagist/v/byrokrat/billing.svg?style=flat-square)](https://packagist.org/packages/byrokrat/billing)
 [![Build Status](https://img.shields.io/travis/byrokrat/billing/master.svg?style=flat-square)](https://travis-ci.org/byrokrat/billing)
@@ -64,7 +63,7 @@ setBuyer([`AgentInterface`][agentinterface] $buyer): self   | Set buyer
 setOcr(string $ocr): self                                   | Set invoice reference number
 generateOcr(): self                                         | Generate invoice reference number from serial number
 addItem([`Billable`][billable] $billable): self             | Add billable to invoice
-setBillDate([`DateTimeImmutable`][datetime] $date): self    | Set date of invoice creation
+setBillDate([`DateTimeInterface`][datetime] $date): self    | Set date of invoice creation
 setExpiresAfter(int $nrOfDays): self                        | Set number of days before invoice expires
 setDeduction([`Amount`][amount] $deduction): self           | Set deduction (amount prepaid)
 setAttribute(string $key, $value): self                     | Set attribute defined by key
@@ -80,9 +79,9 @@ getBuyer(): [`AgentInterface`][agentinterface]       | Get registered buyer
 getOcr(): string                                     | Get invoice reference number
 getItems(): [`ItemBasket`][itembasket]               | Get item basket
 getInvoiceTotal(): [`Amount`][amount]                | Get charged amount (VAT included)
-getBillDate(): [`DateTimeImmutable`][datetime]       | Get date of invoice creation
+getBillDate(): [`DateTimeInterface`][datetime]       | Get date of invoice creation
 getExpiresAfter(): int                               | Get number of days before invoice expires
-getExpirationDate(): [`DateTimeImmutable`][datetime] | Get date when invoice expires
+getExpirationDate(): [`DateTimeInterface`][datetime] | Get date when invoice expires
 getDeduction(): [`Amount`][amount]                   | Get deducted prepaid amound
 getAttribute(string $key, $default = ''): mixed      | Get attribute or default if attribute is not set
 getAttributes(): array                               | Get all loaded attributes
@@ -105,7 +104,7 @@ getVatRates(): array                        | Get unit and vat totals for non-ze
 [agentinterface]: /src/AgentInterface.php
 [itembasket]: /src/ItemBasket.php
 [amount]: https://github.com/byrokrat/amount
-[datetime]: http://php.net/manual/en/class.datetimeimmutable.php
+[datetime]: http://php.net/manual/en/class.DateTimeInterface.php
 [traversable]: http://php.net/manual/en/class.traversable.php
 
 Credits

@@ -22,8 +22,8 @@
         }
     },
     "require": {
-        "php": "^7.0",
-        "byrokrat/amount": "^1.0",
-        "byrokrat/checkdigit": "^1.0"
+        "php": "^7.1",
+        "byrokrat/amount": "^2",
+        "byrokrat/checkdigit": "^2"
     }
 }

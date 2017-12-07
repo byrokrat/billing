@@ -41,7 +41,7 @@ class InvoiceTest extends TestCase
                             $this->getBillableMock('', new Amount('50'), 2, 0)
                         )
                     ),
-                    null,
+                    new \DateTimeImmutable,
                     0,
                     new Amount('100')
                 )
@@ -64,7 +64,9 @@ class InvoiceTest extends TestCase
                         new ItemEnvelope(
                             $this->getBillableMock('', new Currency\SEK('100'))
                         )
-                    )
+                    ),
+                    new \DateTimeImmutable,
+                    0
                 )
             )->getInvoiceTotal(),
             'Deduction of 0 SEK should work as expected'
@@ -85,7 +87,7 @@ class InvoiceTest extends TestCase
                         $this->getBillableMock('', new Currency\SEK('100'))
                     )
                 ),
-                null,
+                new \DateTimeImmutable,
                 0,
                 new Currency\EUR('100')
             )

@@ -10,26 +10,27 @@ class OcrToolsTest extends TestCase
     {
         $this->assertEquals(
             '12345682',
-            (new OcrTools)->create('123456')
+            (new OcrTools)->createOcr('123456')
         );
     }
 
     public function testExceptionOnCreateWithInvalidLength()
     {
         $this->expectException(Exception::CLASS);
-        (new OcrTools)->create('123456789012345678901234');
+        (new OcrTools)->createOcr('123456789012345678901234');
     }
 
     public function testExceptionOnCreateWithNonNumericValue()
     {
         $this->expectException(Exception::CLASS);
-        (new OcrTools)->create('123L');
+        (new OcrTools)->createOcr('123L');
     }
 
     public function testValidateOcr()
     {
-        $this->assertTrue(
-            (new OcrTools)->validate('12345682')
+        $this->assertSame(
+            '12345682',
+            (new OcrTools)->validateOcr('12345682')
         );
     }
 
@@ -48,18 +49,18 @@ class OcrToolsTest extends TestCase
     public function testExceptionOnInvalidOcrStructure($ocr)
     {
         $this->expectException(Exception::CLASS);
-        (new OcrTools)->validate($ocr);
+        (new OcrTools)->validateOcr($ocr);
     }
 
     public function testExceptionOnInvalidOcrLengthDigit()
     {
         $this->expectException(Exception::CLASS);
-        (new OcrTools)->validate('12345602');
+        (new OcrTools)->validateOcr('12345602');
     }
 
     public function testExceptionOnInvalidOcrCheckDigit()
     {
         $this->expectException(Exception::CLASS);
-        (new OcrTools)->validate('12345680');
+        (new OcrTools)->validateOcr('12345680');
     }
 }
