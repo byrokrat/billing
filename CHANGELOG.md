@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- Nothing...
+
+## [2.0.0] - 2017-12-07
+
+### Changed
 - Changed `OcrTools` internal API.
 - Using `DateTimeInterface` when representing dates.
 

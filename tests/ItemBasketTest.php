@@ -34,7 +34,6 @@ class ItemBasketTest extends TestCase
                 )
             )->$method()
         );
-
     }
 
     public function currencyMethodsProvider()
@@ -62,7 +61,6 @@ class ItemBasketTest extends TestCase
                 )
             )->$method()
         );
-
     }
 
     public function testGetVatRates()
