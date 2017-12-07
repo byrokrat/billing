@@ -11,7 +11,7 @@ Data types for creating and formatting invoices.
 Installation
 ------------
 ```shell
-composer require byrokrat/billing:^1.0
+composer require byrokrat/billing:^2
 ```
 
 Usage
@@ -104,11 +104,5 @@ getVatRates(): array                        | Get unit and vat totals for non-ze
 [agentinterface]: /src/AgentInterface.php
 [itembasket]: /src/ItemBasket.php
 [amount]: https://github.com/byrokrat/amount
-[datetime]: http://php.net/manual/en/class.DateTimeInterface.php
+[datetime]: http://php.net/manual/en/class.datetimeinterface.php
 [traversable]: http://php.net/manual/en/class.traversable.php
-
-Credits
--------
-Billing is covered under the [WTFPL](http://www.wtfpl.net/)
-
-@author Hannes Forsgård (hannes.forsgard@fripost.org)

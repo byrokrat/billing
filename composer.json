@@ -4,7 +4,7 @@
     "keywords": ["billing", "invoice", "OCR"],
     "homepage": "https://github.com/byrokrat/billing",
     "type": "library",
-    "license": "WTFPL",
+    "license": "Unlicense",
     "authors": [
         {
             "name": "Hannes Forsgård",
