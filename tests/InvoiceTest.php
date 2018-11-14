@@ -25,8 +25,7 @@ class InvoiceTest extends TestCase
 
     public function testGetInvoiceTotal()
     {
-        $this->assertEquals(
-            new Amount('125'),
+        $this->assertTrue(
             (
                 new Invoice(
                     '',
@@ -45,15 +44,14 @@ class InvoiceTest extends TestCase
                     0,
                     new Amount('100')
                 )
-            )->getInvoiceTotal(),
+            )->getInvoiceTotal()->equals(new Amount('125')),
             '1 unit á 100 and 25% VAT plus 2 units á 50 minus 100 in deduction should equal 125'
         );
     }
 
     public function testDeductionUsingDefaultCurrency()
     {
-        $this->assertEquals(
-            new Currency\SEK('125'),
+        $this->assertTrue(
             (
                 new Invoice(
                     '',
@@ -68,7 +66,9 @@ class InvoiceTest extends TestCase
                     new \DateTimeImmutable,
                     0
                 )
-            )->getInvoiceTotal(),
+            )->getInvoiceTotal()->equals(
+                new Currency\SEK('125')
+            ),
             'Deduction of 0 SEK should work as expected'
         );
     }

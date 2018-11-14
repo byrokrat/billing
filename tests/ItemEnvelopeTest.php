@@ -18,9 +18,10 @@ class ItemEnvelopeTest extends TestCase
 
     public function testGetCostPerUnit()
     {
-        $this->assertEquals(
-            new Amount('100'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'))))->getCostPerUnit()
+        $this->assertTrue(
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'))))->getCostPerUnit()->equals(
+                new Amount('100')
+            )
         );
     }
 
@@ -42,29 +43,33 @@ class ItemEnvelopeTest extends TestCase
 
     public function testGetTotalUnitCost()
     {
-        $this->assertEquals(
-            new Amount('200'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2)))->getTotalUnitCost()
+        $this->assertTrue(
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2)))->getTotalUnitCost()->equals(
+                new Amount('200')
+            )
         );
     }
 
     public function testGetTotalVatCost()
     {
-        $this->assertEquals(
-            new Amount('25'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, .25)))->getTotalVatCost()
+        $this->assertTrue(
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 1, .25)))->getTotalVatCost()->equals(
+                new Amount('25')
+            )
         );
-        $this->assertEquals(
-            new Amount('25'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, .125)))->getTotalVatCost()
+        $this->assertTrue(
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, .125)))->getTotalVatCost()->equals(
+                new Amount('25')
+            )
         );
     }
 
     public function testGetTotalCost()
     {
-        $this->assertEquals(
-            new Amount('250'),
-            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, .25)))->getTotalCost()
+        $this->assertTrue(
+            (new ItemEnvelope($this->getBillableMock('', new Amount('100'), 2, .25)))->getTotalCost()->equals(
+                new Amount('250')
+            )
         );
     }
 }

@@ -3,6 +3,7 @@ sudo: false
 language: php
 
 php:
+  - 7.3
   - 7.2
   - 7.1
 
@@ -10,9 +11,9 @@ install:
     - composer require hanneskod/readme-tester:1.0-beta.3
 
 script:
-  - if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then phpunit --coverage-clover=coverage.clover ; fi
-  - if [[ "$TRAVIS_PHP_VERSION" != '7.0' ]]; then phpunit ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == '7.3' ]]; then phpunit --coverage-clover=coverage.clover ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" != '7.3' ]]; then phpunit ; fi
 
 after_script:
-  - if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then wget https://scrutinizer-ci.com/ocular.phar ; fi
-  - if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == '7.3' ]]; then wget https://scrutinizer-ci.com/ocular.phar ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == '7.3' ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover ; fi
