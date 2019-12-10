@@ -10,7 +10,7 @@ Data types for creating and formatting invoices.
 Installation
 ------------
 ```shell
-composer require byrokrat/billing:^2
+composer require byrokrat/billing
 ```
 
 Usage
