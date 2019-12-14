@@ -13,7 +13,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "byrokrat\\billing\\": "src/"
+            "byrokrat\\billing\\": "src/",
+            "byrokrat\\paperinvoice\\": "paperinvoice/"
         }
     },
     "autoload-dev": {
@@ -22,9 +23,12 @@
         }
     },
     "require": {
-        "php": "^7.1",
+        "php": ">=7.1",
         "byrokrat/amount": "^2",
-        "byrokrat/checkdigit": "^2"
+        "byrokrat/checkdigit": "^2",
+        "byrokrat/banking": "^2",
+        "byrokrat/id": "^2",
+        "setasign/fpdf": "~1.7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7",

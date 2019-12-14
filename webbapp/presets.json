@@ -1,0 +1,20 @@
+{
+    "seller": {
+        "name": "",
+        "address": "",
+        "phone": "",
+        "mail": "",
+        "id": "",
+        "account": "",
+        "tax": false
+    },
+    "buyers": [
+        {
+            "name": "",
+            "ref": "",
+            "address": ""
+        }
+    ],
+    "message": "Vid betalning efter förfallodagen tillkommer påminnelseavgift om 50 kr samt 10% dröjsmålsränta. Ange OCR-nummer vid betalning.",
+    "paymentTerm": 30
+}
