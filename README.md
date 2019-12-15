@@ -1,3 +1,5 @@
+> ABANDONED! This package is discontinued and will not be updated.
+
 # Billing
 
 [![Packagist Version](https://img.shields.io/packagist/v/byrokrat/billing.svg?style=flat-square)](https://packagist.org/packages/byrokrat/billing)
